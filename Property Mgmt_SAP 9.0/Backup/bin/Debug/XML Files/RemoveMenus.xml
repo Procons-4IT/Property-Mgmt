@@ -1,0 +1,26 @@
+﻿<Application>
+	<Menus>
+		
+		<action type="remove">
+			<menu uniqueid="Z_Mnu_Renewal"></menu>
+			<menu uniqueid="Z_Mnu_Posting"></menu>
+			<Menu uniqueiD="Z_Menu_113"></Menu>
+			<Menu uniqueiD="Z_Menu_123"></Menu>
+			<Menu uniqueiD="Z_Menu_112"></Menu>
+			<Menu uniqueiD="Z_Menu_111"></Menu>
+			<Menu UniqueID="Z_Menu_110"></Menu>
+			<Menu UniqueID="Z_Menu_109"></Menu>
+			<Menu UniqueID="Z_Menu_108"></Menu>
+			<Menu UniqueID="Z_Menu_107"></Menu>
+			<Menu UniqueID="Z_Menu_106"></Menu>
+			<Menu UniqueID="Z_Menu_105"></Menu>
+			<Menu UniqueID="Z_Menu_104"></Menu>
+			<Menu UniqueID="Z_Menu_103"></Menu>
+			<Menu UniqueID="Z_Menu_102"></Menu>
+			<Menu UniqueID="Z_Menu_201"></Menu>
+			<Menu UniqueID="Z_Menu_101"></Menu>
+			
+			
+			</action>
+	</Menus>
+</Application>

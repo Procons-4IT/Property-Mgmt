@@ -1,0 +1,9 @@
+05-09-2013 09:37--> Processing Invoice Posting : Month  : July  - Year : 2015
+05-09-2013 09:37--> Processing Invoice Posting : Month  : July  - Year : 2015
+05-09-2013 09:38--> Processing Invoice Posting : Month  : July  - Year : 2015
+05-09-2013 09:39--> Processing Invoice Posting : Month  : July  - Year : 2015
+05-09-2013 09:39--> Processing Invoice Posting : Month  : July  - Year : 2015
+05-09-2013 09:39--> Processing Contract Number : CR3749
+05-09-2013 09:39--> Processing Contract Number : CR3749
+05-09-2013 09:39--> Error Creating Invoice  Contract Number : CR3749: Error : Update the exchange rate  , 'DKK'
+05-09-2013 09:39--> Error Creating Invoice  Contract Number : CR3749: Error : Update the exchange rate  , 'DKK'

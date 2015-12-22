@@ -1,0 +1,82 @@
+<Application>
+	<Menus>
+		<action type="add">
+
+			<Menu Checked="0" Enabled="1" FatherUID="43520" Image="" Position="13" String="Property Managment"
+	Type="2" UniqueID="Z_Menu_101">
+			</Menu>
+
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="0" String="Setup"
+Type="2" UniqueID="Z_Menu_201">
+			</Menu>
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_201" Image="" Position="0" String="Expense Master"
+		Type="1" UniqueID="Z_Menu_111"></Menu>
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_201" Image="" Position="1" String="Location - Setup"
+					Type="1" UniqueID="Z_Menu_123">
+			</Menu>
+
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_201" Image="" Position="2" String="Property Unit Price List"
+					Type="1" UniqueID="Z_Menu_110">
+			</Menu>
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_201" Image="" Position="3" String="Property  Type"
+								Type="1" UniqueID="Z_Menu_112">
+			</Menu>
+
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_201" Image="" Position="4" String="Property Unit Type"
+		Type="1" UniqueID="Z_Menu_103">
+			</Menu>
+
+
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="3" String="Properties"
+		Type="1" UniqueID="Z_Menu_104">
+			</Menu>
+
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="4" String="Property Evalution Details"
+	Type="1" UniqueID="mnu_Evalution">
+			</Menu>
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="5" String="Property Units"
+								Type="1" UniqueID="Z_Menu_105">
+			</Menu>
+
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="6" String="Insurance"
+Type="1" UniqueID="Z_Menu_108">
+			</Menu>
+
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="7" String="Reservation"
+Type="1" UniqueID="Z_Menu_106">
+			</Menu>
+
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="8" String="Owner Contract"
+Type="1" UniqueID="Z_Menu_107">
+			</Menu>
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="9" String="Tenant Contract"
+Type="1" UniqueID="Z_Menu_117">
+			</Menu>
+
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="10" String="Contract Renewal Wizard"
+					Type="1" UniqueID="Z_Mnu_Renewal">
+			</Menu>
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="11" String="Search"
+	Type="1" UniqueID="Z_Menu_109">
+			</Menu>
+
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="12" String="Bill Generation Wizard"
+	Type="1" UniqueID="Z_Menu_113">
+			</Menu>
+			<Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="13" String="Posting Downpayment Wizard"
+			Type="1" UniqueID="Z_Mnu_Posting">
+			</Menu>
+
+      <Menu Checked="0" Enabled="1" FatherUID="Z_Menu_101" Image="" Position="14" String="Financial Transaction-Report"
+    Type="1" UniqueID="Z_Mnu_Report">
+      </Menu>
+
+
+
+
+
+
+
+		</action>
+	</Menus>
+</Application>
