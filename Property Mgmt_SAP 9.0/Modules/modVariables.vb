@@ -5,7 +5,7 @@ Public Module modVariables
     Public cfl_Text As String
     Public cfl_Btn As String
     Public sSearchList As String
-
+    Public blnMultiBranch As Boolean = False
     Public CompanyDecimalSeprator As String
     Public CompanyThousandSeprator As String
     Public blnMasterExport As Boolean = False
@@ -15,7 +15,7 @@ Public Module modVariables
     Public frmSourceMatrix As SAPbouiCOM.Matrix
     Public strItemSelectionQuery As String = ""
     Public frmSourcePaymentform As SAPbouiCOM.Form
-
+    Public blnInstallmentfromContract As Boolean = False
     Public intSelectedMatrixrow As Integer = 0
     Public strSPBPCode As String = ""
     Public strSPItemCode As String = ""

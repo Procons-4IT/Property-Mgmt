@@ -298,7 +298,9 @@
     <Content Include="bin\Debug\XML Files\Menu.xml" />
     <Content Include="bin\Debug\XML Files\RemoveMenus.xml" />
     <Content Include="bin\Debug\XML Files\xml_ItemGroup.xml" />
-    <Content Include="bin\Debug\XML Files\xml_Ten_Contracts.xml" />
+    <Content Include="bin\Debug\XML Files\xml_Ten_Contracts.xml">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3924545A-F8E2-475A-B1A4-05175BC41E50}" />

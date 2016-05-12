@@ -262,19 +262,17 @@ Public Class clsRenewal
                         oGeneralData1.SetProperty("U_Z_CONTDATE", Now.Date)
                         oGeneralData1.SetProperty("U_Z_STARTDATE", ReStdate)
                         oGeneralData1.SetProperty("U_Z_ENDDATE", reEndDate)
-
+                        oGeneralData1.SetProperty("U_Z_RENTTYPE", oGeneralData.GetProperty("U_Z_RENTTYPE"))
                         oGeneralData1.SetProperty("U_Z_BASESTARTDATE", oGeneralData.GetProperty("U_Z_STARTDATE"))
                         oGeneralData1.SetProperty("U_Z_BASEENDDATE", oGeneralData.GetProperty("U_Z_ENDDATE"))
                         oGeneralData1.SetProperty("U_Z_BASEENTRY", oGeneralData.GetProperty("DocEntry"))
                         oGeneralData1.SetProperty("U_Z_BASESEQ", oGeneralData.GetProperty("U_Z_SEQNO"))
-
                         Dim oTes1 As SAPbobsCOM.Recordset
                         oTes1 = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
                         oTes1.DoQuery("Select count(*)  from [@Z_CONTRACT] where U_Z_CONNO='" & oGeneralData.GetProperty("U_Z_CONNO") & "'")
                         Dim dblCounter As Integer = oTes1.Fields.Item(0).Value
                         dblCounter = dblCounter + 1
                         oGeneralData1.SetProperty("U_Z_SEQNO", dblCounter)
-
                         If oGeneralData.GetProperty("U_Z_MASTER") = "" Then
                             oGeneralData1.SetProperty("U_Z_MASTER", oGeneralData.GetProperty("U_Z_CONNO"))
                         Else
@@ -283,7 +281,6 @@ Public Class clsRenewal
                         Dim newCon As String = strContractNumber & "_" & dblCounter
                         oGeneralData1.SetProperty("U_Z_CNTNO", newCon)
                         strContractNumber = strContractNumber & "_" & oTes1.Fields.Item(0).Value
-
                         oGeneralData1.SetProperty("U_Z_BASECONNO", oGeneralData.GetProperty("U_Z_CONNO"))
                         oCombo = oGrid.Columns.Item("ReStatus")
                         Dim strstatus As String = oCombo.GetSelectedValue(intRow).Value
@@ -1475,6 +1472,8 @@ Public Class clsRenewal
                 oCombo = aGrid.Columns.Item("RenewType")
                 oCombo.ValidValues.Add("D", "Days")
                 oCombo.ValidValues.Add("M", "Month")
+                'oCombo.ValidValues.Add("Q", "Quarterly")
+                ' oCombo.ValidValues.Add("S", "Semi Annual")
                 oCombo.ValidValues.Add("Y", "Year")
                 oCombo.DisplayType = SAPbouiCOM.BoComboDisplayType.cdt_both
                 oCombo.ExpandType = SAPbouiCOM.BoExpandType.et_DescriptionOnly
@@ -1494,7 +1493,6 @@ Public Class clsRenewal
                 oCombo = aGrid.Columns.Item("IncreType")
                 oCombo.ValidValues.Add("P", "Percentage")
                 oCombo.ValidValues.Add("A", "Amount")
-                oCombo.ValidValues.Add("M", "Manual Amount")
                 oCombo.DisplayType = SAPbouiCOM.BoComboDisplayType.cdt_both
                 oCombo.ExpandType = SAPbouiCOM.BoExpandType.et_DescriptionOnly
 
@@ -1681,24 +1679,6 @@ Public Class clsRenewal
                         Select Case pVal.EventType
                             Case SAPbouiCOM.BoEventTypes.et_KEY_DOWN
                                 oForm = oApplication.SBO_Application.Forms.Item(FormUID)
-                                If pVal.ItemUID = "10" And pVal.ColUID = "IncrPercentage" And pVal.CharPressed <> 9 Then
-                                    oGrid = oForm.Items.Item(pVal.ItemUID).Specific
-                                    oCombo = oGrid.Columns.Item("IncreType")
-                                    If oCombo.GetSelectedValue(pVal.Row).Value = "M" Then
-                                        BubbleEvent = False
-                                        Exit Sub
-                                    End If
-                                End If
-                            Case SAPbouiCOM.BoEventTypes.et_CLICK
-                                oForm = oApplication.SBO_Application.Forms.Item(FormUID)
-                                If pVal.ItemUID = "10" And pVal.ColUID = "IncrPercentage" And pVal.CharPressed <> 9 Then
-                                    oGrid = oForm.Items.Item(pVal.ItemUID).Specific
-                                    oCombo = oGrid.Columns.Item("IncreType")
-                                    If oCombo.GetSelectedValue(pVal.Row).Value = "M" Then
-                                        BubbleEvent = False
-                                        Exit Sub
-                                    End If
-                                End If
                             Case SAPbouiCOM.BoEventTypes.et_ITEM_PRESSED
                                 oForm = oApplication.SBO_Application.Forms.Item(FormUID)
                                 Select Case pVal.ItemUID
@@ -1734,6 +1714,10 @@ Public Class clsRenewal
                                         dtEndDate = DateAdd(DateInterval.Month, intPeriod, dtEndDate)
                                     ElseIf oCombo.GetSelectedValue(pVal.Row).Value = "Y" Then
                                         dtEndDate = DateAdd(DateInterval.Year, intPeriod, dtEndDate)
+                                    ElseIf oCombo.GetSelectedValue(pVal.Row).Value = "S" Then
+                                        dtEndDate = DateAdd(DateInterval.Month, intPeriod * 6, dtEndDate)
+                                    ElseIf oCombo.GetSelectedValue(pVal.Row).Value = "Q" Then
+                                        dtEndDate = DateAdd(DateInterval.Month, intPeriod + 3, dtEndDate)
                                     Else
                                         dtEndDate = DateAdd(DateInterval.Day, intPeriod, dtEndDate)
                                     End If
@@ -1770,9 +1754,6 @@ Public Class clsRenewal
                                             dtEndDate = dtEndDate + (dtEndDate * intPeriod / 100)
                                         ElseIf oCombo.GetSelectedValue(pVal.Row).Value = "A" Then
                                             dtEndDate = dtEndDate + (intPeriod)
-                                        ElseIf oCombo.GetSelectedValue(pVal.Row).Value = "M" Then
-                                            dtMonthly = oGrid.DataTable.GetValue("MONTHLY", pVal.Row)
-                                            dtEndDate = dtMonthly * 12
                                         Else
                                             dtEndDate = dtEndDate
                                         End If
@@ -1782,9 +1763,6 @@ Public Class clsRenewal
                                             dtEndDate = dtMonthly + (dtMonthly * intPeriod / 100)
                                         ElseIf oCombo.GetSelectedValue(pVal.Row).Value = "A" Then
                                             dtEndDate = dtMonthly + (intPeriod)
-                                        ElseIf oCombo.GetSelectedValue(pVal.Row).Value = "M" Then
-                                            dtMonthly = oGrid.DataTable.GetValue("MONTHLY", pVal.Row)
-                                            dtEndDate = dtMonthly * 12
                                         Else
                                             dtEndDate = dtMonthly
                                         End If
@@ -1808,6 +1786,7 @@ Public Class clsRenewal
                                     oCombo = oGrid.Columns.Item("RenewType")
                                     If oCombo.GetSelectedValue(pVal.Row).Value = "M" Then
                                         dtEndDate = DateAdd(DateInterval.Month, intPeriod, dtEndDate)
+                                  
                                     ElseIf oCombo.GetSelectedValue(pVal.Row).Value = "Y" Then
                                         dtEndDate = DateAdd(DateInterval.Year, intPeriod, dtEndDate)
                                     Else

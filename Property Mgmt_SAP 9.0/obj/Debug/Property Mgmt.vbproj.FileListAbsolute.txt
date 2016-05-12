@@ -346,26 +346,67 @@ G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase I
 G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\20150709_Property Mgmt_SAP 9.0\obj\Debug\Property_Mgmt.frmReportViewer.resources
 G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\20150709_Property Mgmt_SAP 9.0\obj\Debug\Property_Mgmt.Resources.resources
 G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\20150709_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbproj.GenerateResource.Cache
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.exe.config
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\obj\Debug\Interop.SAPbobsCOM.dll
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\obj\Debug\Interop.SAPbouiCOM.dll
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbproj.ResolveComReference.cache
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.exe
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.xml
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.pdb
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.exe
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.pdb
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.xml
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\bin\Debug\Interop.SAPbobsCOM.dll
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\bin\Debug\Interop.SAPbouiCOM.dll
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbprojResolveAssemblyReference.cache
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\obj\Debug\Property_Mgmt.frmReportViewer.resources
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\obj\Debug\Property_Mgmt.Resources.resources
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20150722_Property Mgmt 2.0.18\20150722_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbproj.GenerateResource.Cache
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20151208_Property Mgmt 2.0.19\20151208_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.exe.config
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20151208_Property Mgmt 2.0.19\20151208_Property Mgmt_SAP 9.0\obj\Debug\Interop.SAPbobsCOM.dll
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20151208_Property Mgmt 2.0.19\20151208_Property Mgmt_SAP 9.0\obj\Debug\Interop.SAPbouiCOM.dll
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20151208_Property Mgmt 2.0.19\20151208_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbproj.ResolveComReference.cache
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20151208_Property Mgmt 2.0.19\20151208_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.exe
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20151208_Property Mgmt 2.0.19\20151208_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.xml
-G:\International Projects_SAP9.0\Procons-4IT\Property Mgmt\Property Mgmt Phase II\Deliveries\20151208_Property Mgmt 2.0.19\20151208_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.pdb
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.exe.config
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\obj\Debug\Interop.SAPbobsCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\obj\Debug\Interop.SAPbouiCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbproj.ResolveComReference.cache
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.exe
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.xml
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.pdb
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.exe
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.pdb
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.xml
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\bin\Debug\Interop.SAPbobsCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\bin\Debug\Interop.SAPbouiCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbprojResolveAssemblyReference.cache
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\obj\Debug\Property_Mgmt.frmReportViewer.resources
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\obj\Debug\Property_Mgmt.Resources.resources
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160429_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbproj.GenerateResource.Cache
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.exe.config
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\obj\Debug\Interop.SAPbobsCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\obj\Debug\Interop.SAPbouiCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbproj.ResolveComReference.cache
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.exe
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.xml
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.pdb
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.exe
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.pdb
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.xml
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\bin\Debug\Interop.SAPbobsCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\bin\Debug\Interop.SAPbouiCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbprojResolveAssemblyReference.cache
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\obj\Debug\Property_Mgmt.frmReportViewer.resources
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\obj\Debug\Property_Mgmt.Resources.resources
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160503_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbproj.GenerateResource.Cache
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.exe.config
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\obj\Debug\Interop.SAPbobsCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\obj\Debug\Interop.SAPbouiCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbproj.ResolveComReference.cache
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.exe
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.xml
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.pdb
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.exe
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.pdb
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.xml
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\bin\Debug\Interop.SAPbobsCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\bin\Debug\Interop.SAPbouiCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbprojResolveAssemblyReference.cache
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\obj\Debug\Property_Mgmt.frmReportViewer.resources
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\obj\Debug\Property_Mgmt.Resources.resources
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160511_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbproj.GenerateResource.Cache
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.exe.config
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\obj\Debug\Interop.SAPbobsCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\obj\Debug\Interop.SAPbouiCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbproj.ResolveComReference.cache
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.xml
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.pdb
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.exe
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.pdb
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\bin\Debug\Property Mgmt.xml
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\bin\Debug\Interop.SAPbobsCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\bin\Debug\Interop.SAPbouiCOM.dll
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbprojResolveAssemblyReference.cache
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\obj\Debug\Property_Mgmt.frmReportViewer.resources
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\obj\Debug\Property_Mgmt.Resources.resources
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.vbproj.GenerateResource.Cache
+F:\Internation Projects 2016\Procons4it\Property Mgmt\20160512_Property Mgmt_SAP 9.0\obj\Debug\Property Mgmt.exe

@@ -59,8 +59,29 @@ Public Class clsTenContracts
         st = "Update [@Z_CONTRACT] set U_Z_CntNo= U_Z_ConNo +'_'+ convert(varchar,isnull(U_Z_SeqNo,'1'))"
         oTest.DoQuery(st)
         databind(oForm)
+
         oForm.PaneLevel = 1
         oForm.Freeze(False)
+    End Sub
+    Private Sub FillRentType(aForm As SAPbouiCOM.Form)
+        oCombo = aForm.Items.Item("111").Specific
+        For intRow As Integer = oCombo.ValidValues.Count - 1 To 0 Step -1
+            Try
+                oCombo.ValidValues.Remove(intRow, SAPbouiCOM.BoSearchKey.psk_Index)
+            Catch ex As Exception
+
+            End Try
+        Next
+        oCombo.ValidValues.Add("", "")
+        ' oCombo.ValidValues.Add("D", "Daily")
+        ' oCombo.ValidValues.Add("W", "Weekly")
+        oCombo.ValidValues.Add("M", "Monthly")
+        oCombo.ValidValues.Add("Q", "Quarterly")
+        oCombo.ValidValues.Add("S", "Semi Annual")
+        oCombo.ValidValues.Add("A", "Annual")
+        oCombo.Select(0, SAPbouiCOM.BoSearchKey.psk_Index)
+        oCombo.ExpandType = SAPbouiCOM.BoExpandType.et_DescriptionOnly
+        aForm.Items.Item("111").DisplayDesc = True
     End Sub
 
     Public Sub LoadForm1(ByVal ContCode As String)
@@ -367,7 +388,7 @@ Public Class clsTenContracts
             oButCombo.ValidValues.Add("Print-RentGeneral", "Rent-General")
             oButCombo.ValidValues.Add("Print-Al Bayan", "Al Bayan")
             oButCombo.ValidValues.Add("Private Eng office", "Private Eng office")
-
+            FillRentType(oForm)
             aForm.Items.Item("77").DisplayDesc = False
             aForm.Freeze(False)
         Catch ex As Exception
@@ -655,11 +676,11 @@ Public Class clsTenContracts
         '  MsgBox(oApplication.Utilities.getWords(dblAnnualrent.ToString))
         '   oApplication.Utilities.setEdittextvalue(aform, "47", (oApplication.Utilities.SFormatNumber(dblAnnualrent)))
 
-        If aform.Mode = SAPbouiCOM.BoFormMode.fm_ADD_MODE Then
+        If 1 = 1 Then ' aform.Mode = SAPbouiCOM.BoFormMode.fm_ADD_MODE Then
             Dim strFromDate, strToDate As String
             Dim dtFromDate, dttoDate As Date
-            strFromDate = oApplication.Utilities.getEdittextvalue(oForm, "4")
-            strToDate = oApplication.Utilities.getEdittextvalue(oForm, "6")
+            strFromDate = oApplication.Utilities.getEdittextvalue(aform, "4")
+            strToDate = oApplication.Utilities.getEdittextvalue(aform, "6")
             If strFromDate <> "" Then
                 dtFromDate = oApplication.Utilities.GetDateTimeValue(strFromDate)
             End If
@@ -668,16 +689,71 @@ Public Class clsTenContracts
             End If
             If strFromDate <> "" And strToDate <> "" Then
                 Dim intNoofMonths As Integer
-                '  intNoofMonths = DateDiff(DateInterval.Month, dtFromDate, dttoDate)
-                Do Until dtFromDate >= dttoDate
-                    intNoofMonths = intNoofMonths + 1
-                    dtFromDate = DateAdd(DateInterval.Month, 1, dtFromDate)
-                Loop
+                Dim strRentType As String
+                Dim intNoofDays As Double = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "115"))
+                strFromDate = oApplication.Utilities.getEdittextvalue(aform, "4")
+                strToDate = oApplication.Utilities.getEdittextvalue(aform, "6")
+                oCombo = oForm.Items.Item("111").Specific
+                strRentType = oCombo.Selected.Value
+                If strFromDate <> "" Then
+                    dtFromDate = oApplication.Utilities.GetDateTimeValue(strFromDate)
+                End If
+                If strToDate <> "" Then
+                    dttoDate = oApplication.Utilities.GetDateTimeValue(strToDate)
+                End If
+                Select Case strRentType
+                    Case "D" '
+                        If intNoofDays = 0 Then
+                            intNoofDays = 1
+                        End If
+                        Do Until dtFromDate >= dttoDate
+                            intNoofMonths = intNoofMonths + 1
+                            dtFromDate = DateAdd(DateInterval.Day, intNoofDays, dtFromDate)
+                        Loop
+                    Case "W"
+                        Do Until dtFromDate >= dttoDate
+                            intNoofMonths = intNoofMonths + 1
+                            dtFromDate = DateAdd(DateInterval.Day, 7, dtFromDate)
+                        Loop
+                    Case "M"
+                        Do Until dtFromDate >= dttoDate
+                            intNoofMonths = intNoofMonths + 1
+                            dtFromDate = DateAdd(DateInterval.Month, 1, dtFromDate)
+                        Loop
+                    Case "Q"
+                        Do Until dtFromDate >= dttoDate
+                            intNoofMonths = intNoofMonths + 1
+                            dtFromDate = DateAdd(DateInterval.Month, 3, dtFromDate)
+                        Loop
+                    Case "S"
+                        Do Until dtFromDate >= dttoDate
+                            intNoofMonths = intNoofMonths + 1
+                            dtFromDate = DateAdd(DateInterval.Month, 6, dtFromDate)
+                        Loop
+                    Case "A"
+                        Do Until dtFromDate >= dttoDate
+                            intNoofMonths = intNoofMonths + 1
+                            dtFromDate = DateAdd(DateInterval.Year, 1, dtFromDate)
+                        Loop
+                End Select
+                'Do Until dtFromDate >= dttoDate
+                '    intNoofMonths = intNoofMonths + 1
+                '    dtFromDate = DateAdd(DateInterval.Month, 1, dtFromDate)
+                'Loop
                 If intNoofMonths = 0 Then
                     intNoofMonths = 1
                 End If
                 ' oApplication.Utilities.setEdittextvalue(oForm, "28", DateDiff(DateInterval.Month, dtFromDate, dttoDate))
-                oApplication.Utilities.setEdittextvalue(oForm, "28", intNoofMonths)
+                oApplication.Utilities.setEdittextvalue(aform, "28", intNoofMonths)
+                Dim dblNoMonth, dblAnnual, dblMonth As Double
+                dblNoMonth = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(aform, "28"))
+                dblAnnual = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(aform, "17"))
+                dblMonth = dblAnnual / dblNoMonth
+                oApplication.Utilities.setEdittextvalue(aform, "84", dblMonth)
+                ' oApplication.Utilities.setEdittextvalue(oForm, "28", DateDiff(DateInterval.Month, dtFromDate, dttoDate))
+                dblMonth = dblAnnual / 12
+                oApplication.Utilities.setEdittextvalue(aform, "220", dblMonth)
+                oApplication.Utilities.setEdittextvalue(aform, "28", intNoofMonths)
             End If
         End If
 
@@ -1658,11 +1734,13 @@ Public Class clsTenContracts
                 Dim otest As SAPbobsCOM.Recordset
                 otest = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
                 If stXML <> "" Then
-
                     otest.DoQuery("select * from [@Z_CONTRACT]  where DocEntry=" & stXML)
                     If otest.RecordCount > 0 Then
-                        Dim intTempID As String = oApplication.Utilities.GetTemplateID(oForm, "TEA")
+                        Dim oobj As New clsInstallment
+                        blnInstallmentfromContract = True
+                        oobj.LoadForm(stXML)
 
+                        Dim intTempID As String = oApplication.Utilities.GetTemplateID(oForm, "TEA")
                         If intTempID <> "0" Then
                             oApplication.Utilities.UpdateApprovalRequired("@Z_CONTRACT", "DocEntry", otest.Fields.Item("DocEntry").Value, "Y", intTempID)
                             oApplication.Utilities.InitialMessage("Contract Request", otest.Fields.Item("DocEntry").Value, oApplication.Utilities.DocApproval(oForm, "TEA"), intTempID, otest.Fields.Item("U_Z_TENNAME").Value, "TEA")
@@ -1688,6 +1766,10 @@ Public Class clsTenContracts
                     If stXML <> "" Then
                         otest.DoQuery("select * from [@Z_CONTRACT]  where DocEntry=" & stXML)
                         If otest.RecordCount > 0 Then
+                            Dim oobj As New clsInstallment
+                            blnInstallmentfromContract = True
+                            oobj.LoadForm(stXML)
+
                             Dim intTempID As String = oApplication.Utilities.GetTemplateID(oForm, "TER")
                             If intTempID <> "0" Then
                                 'oApplication.Utilities.UpdateApprovalRequired1("@Z_CONTRACT", "DocEntry", otest.Fields.Item("DocEntry").Value, "Y", intTempID)
@@ -1699,7 +1781,17 @@ Public Class clsTenContracts
                             End If
                         End If
                     End If
-                End If
+                Else
+                    Dim otest As SAPbobsCOM.Recordset
+                    otest = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+                    otest.DoQuery("select * from [@Z_CONTRACT]  where DocEntry=" & stXML)
+                    If otest.RecordCount > 0 Then
+                        Dim oobj As New clsInstallment
+                        blnInstallmentfromContract = True
+                        oobj.LoadForm(stXML)
+                    End If
+
+                    End If
             End If
         Catch ex As Exception
             MsgBox(ex.Message)
@@ -1785,27 +1877,27 @@ Public Class clsTenContracts
                                         '    Exit Sub
                                     End If
                                 End If
-                            Case SAPbouiCOM.BoEventTypes.et_CLICK
-                                oForm = oApplication.SBO_Application.Forms.Item(FormUID)
-                                If (pVal.ItemUID = "56" Or pVal.ItemUID = "58") Then
-                                    oCombo = oForm.Items.Item("54").Specific
-                                    Dim stType As String
-                                    Try
-                                        stType = oCombo.Selected.Value
-                                    Catch ex As Exception
-                                        stType = "O"
-                                    End Try
-                                    If stType = "O" Then
-                                        ' BubbleEvent = False
-                                        '  Exit Sub
-                                    End If
-                                End If
-                                If pVal.ItemUID = "50" Or pVal.ItemUID = "62" Then
-                                    Me.RowtoDelete = pVal.Row
-                                    intSelectedMatrixrow = pVal.Row
-                                    Me.MatrixId = pVal.ItemUID
-                                    frmSourceMatrix = oMatrix
-                                End If
+                                'Case SAPbouiCOM.BoEventTypes.et_CLICK
+                                '    oForm = oApplication.SBO_Application.Forms.Item(FormUID)
+                                '    If (pVal.ItemUID = "56" Or pVal.ItemUID = "58") Then
+                                '        oCombo = oForm.Items.Item("54").Specific
+                                '        Dim stType As String
+                                '        Try
+                                '            stType = oCombo.Selected.Value
+                                '        Catch ex As Exception
+                                '            stType = "O"
+                                '        End Try
+                                '        If stType = "O" Then
+                                '            ' BubbleEvent = False
+                                '            '  Exit Sub
+                                '        End If
+                                '    End If
+                                '    If pVal.ItemUID = "50" Or pVal.ItemUID = "62" Then
+                                '        Me.RowtoDelete = pVal.Row
+                                '        intSelectedMatrixrow = pVal.Row
+                                '        Me.MatrixId = pVal.ItemUID
+                                '        frmSourceMatrix = oMatrix
+                                '    End If
                             Case SAPbouiCOM.BoEventTypes.et_ITEM_PRESSED
                                 oForm = oApplication.SBO_Application.Forms.Item(FormUID)
                                 If pVal.ItemUID = "1" And (oForm.Mode = SAPbouiCOM.BoFormMode.fm_ADD_MODE Or oForm.Mode = SAPbouiCOM.BoFormMode.fm_UPDATE_MODE) Then
@@ -1819,7 +1911,6 @@ Public Class clsTenContracts
                                     Case "85"
                                         If oForm.Mode = SAPbouiCOM.BoFormMode.fm_OK_MODE Then ' SAPbouiCOM.BoFormMode.fm_ADD_MODE And oForm.Mode <> SAPbouiCOM.BoFormMode.fm_FIND_MODE Then
                                             Dim oObj As New clsInstallment
-
                                             oObj.LoadForm(oApplication.Utilities.getEdittextvalue(oForm, "1000002"))
                                             BubbleEvent = False
                                             Exit Sub
@@ -1840,6 +1931,25 @@ Public Class clsTenContracts
                             Case SAPbouiCOM.BoEventTypes.et_CLICK
                                 oForm = oApplication.SBO_Application.Forms.GetForm(pVal.FormTypeEx, pVal.FormTypeCount)
                                 oMatrix = oForm.Items.Item("50").Specific
+                                If (pVal.ItemUID = "56" Or pVal.ItemUID = "58") Then
+                                    oCombo = oForm.Items.Item("54").Specific
+                                    Dim stType As String
+                                    Try
+                                        stType = oCombo.Selected.Value
+                                    Catch ex As Exception
+                                        stType = "O"
+                                    End Try
+                                    If stType = "O" Then
+                                        ' BubbleEvent = False
+                                        '  Exit Sub
+                                    End If
+                                End If
+                                If pVal.ItemUID = "50" Or pVal.ItemUID = "62" Then
+                                    Me.RowtoDelete = pVal.Row
+                                    intSelectedMatrixrow = pVal.Row
+                                    Me.MatrixId = pVal.ItemUID
+                                    frmSourceMatrix = oMatrix
+                                End If
                                 If pVal.ItemUID = "50" And pVal.Row > 0 Then
                                     Me.RowtoDelete = pVal.Row
                                     intSelectedMatrixrow = pVal.Row
@@ -1853,7 +1963,22 @@ Public Class clsTenContracts
                                         BubbleEvent = False
                                         Exit Sub
                                     End If
+                                ElseIf pVal.ItemUID = "111" Then
+                                    oDataSrc_Line = oForm.DataSources.DBDataSources.Item("@Z_CONTRACT")
+                                    If oForm.Mode <> SAPbouiCOM.BoFormMode.fm_ADD_MODE And oForm.Mode <> SAPbouiCOM.BoFormMode.fm_FIND_MODE Then
+                                        Dim strDocEntry As String = oDataSrc_Line.GetValue("DocEntry", 0).Trim
+                                        Dim oRec As SAPbobsCOM.Recordset
+                                        oRec = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+                                        oRec.DoQuery("Select * from [@Z_CONINS]  where U_Z_CONID='" & strDocEntry & "' and U_Z_STATUS='Y'")
+                                        If oRec.RecordCount > 0 Then
+                                            oApplication.Utilities.Message("Some of the installements already paid for this contract and you can not modify the rental type", SAPbouiCOM.BoStatusBarMessageType.smt_Error)
+                                            BubbleEvent = False
+                                            Exit Sub
+                                        End If
+                                    End If
                                 End If
+
+
 
 
 
@@ -1880,14 +2005,20 @@ Public Class clsTenContracts
                                         dblAnnual = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "17"))
                                         dblMonth = dblAnnual / dblNoMonth
                                         oApplication.Utilities.setEdittextvalue(oForm, "84", dblMonth)
+                                        dblMonth = dblAnnual / 12
+                                        oApplication.Utilities.setEdittextvalue(oForm, "220", dblMonth)
                                     End If
                                     
                                 End If
                                 If (pVal.ItemUID = "4" Or pVal.ItemUID = "6") And pVal.CharPressed = 9 Then
-                                    Dim strFromDate, strToDate As String
+                                    Dim strFromDate, strToDate, strRentType As String
                                     Dim dtFromDate, dttoDate As Date
+                                    Dim intNoofDays As Double = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "115"))
+
                                     strFromDate = oApplication.Utilities.getEdittextvalue(oForm, "4")
                                     strToDate = oApplication.Utilities.getEdittextvalue(oForm, "6")
+                                    oCombo = oForm.Items.Item("111").Specific
+                                    strRentType = oCombo.Selected.Value
                                     If strFromDate <> "" Then
                                         dtFromDate = oApplication.Utilities.GetDateTimeValue(strFromDate)
                                     End If
@@ -1897,10 +2028,46 @@ Public Class clsTenContracts
                                     If strFromDate <> "" And strToDate <> "" Then
                                         Dim intNoofMonths As Integer
                                         '  intNoofMonths = DateDiff(DateInterval.Month, dtFromDate, dttoDate)
-                                        Do Until dtFromDate >= dttoDate
-                                            intNoofMonths = intNoofMonths + 1
-                                            dtFromDate = DateAdd(DateInterval.Month, 1, dtFromDate)
-                                        Loop
+
+                                        Select Case strRentType
+                                            Case "D" '
+                                                If intNoofDays = 0 Then
+                                                    intNoofDays = 1
+                                                End If
+                                                Do Until dtFromDate >= dttoDate
+                                                    intNoofMonths = intNoofMonths + 1
+                                                    dtFromDate = DateAdd(DateInterval.Day, intNoofDays, dtFromDate)
+                                                Loop
+                                            Case "W"
+                                                Do Until dtFromDate >= dttoDate
+                                                    intNoofMonths = intNoofMonths + 1
+                                                    dtFromDate = DateAdd(DateInterval.Day, 7, dtFromDate)
+                                                Loop
+                                            Case "M"
+                                                Do Until dtFromDate >= dttoDate
+                                                    intNoofMonths = intNoofMonths + 1
+                                                    dtFromDate = DateAdd(DateInterval.Month, 1, dtFromDate)
+                                                Loop
+                                            Case "Q"
+                                                Do Until dtFromDate >= dttoDate
+                                                    intNoofMonths = intNoofMonths + 1
+                                                    dtFromDate = DateAdd(DateInterval.Month, 3, dtFromDate)
+                                                Loop
+                                            Case "S"
+                                                Do Until dtFromDate >= dttoDate
+                                                    intNoofMonths = intNoofMonths + 1
+                                                    dtFromDate = DateAdd(DateInterval.Month, 6, dtFromDate)
+                                                Loop
+                                            Case "A"
+                                                Do Until dtFromDate >= dttoDate
+                                                    intNoofMonths = intNoofMonths + 1
+                                                    dtFromDate = DateAdd(DateInterval.Year, 1, dtFromDate)
+                                                Loop
+                                        End Select
+                                        'Do Until dtFromDate >= dttoDate
+                                        '    intNoofMonths = intNoofMonths + 1
+                                        '    dtFromDate = DateAdd(DateInterval.Month, 1, dtFromDate)
+                                        'Loop
                                         If intNoofMonths = 0 Then
                                             intNoofMonths = 1
                                         End If
@@ -1911,6 +2078,9 @@ Public Class clsTenContracts
                                         dblAnnual = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "17"))
                                         dblMonth = dblAnnual / dblNoMonth
                                         oApplication.Utilities.setEdittextvalue(oForm, "84", dblMonth)
+
+                                        dblMonth = dblAnnual / 12
+                                        oApplication.Utilities.setEdittextvalue(oForm, "220", dblMonth)
                                     End If
 
 
@@ -1989,12 +2159,85 @@ Public Class clsTenContracts
 
                                 If pVal.ItemUID = "111" Then
                                     oCombo = oForm.Items.Item("111").Specific
-                                    If oCombo.Selected.Value = "A" Then
+                                    If oCombo.Selected.Value = "D" Then
+                                        oForm.Items.Item("115").Enabled = True
                                         oForm.Items.Item("17").Enabled = True
-                                        oForm.Items.Item("84").Enabled = False
-                                    Else
-                                        oForm.Items.Item("17").Enabled = False
                                         oForm.Items.Item("84").Enabled = True
+                                    Else
+                                        oForm.Items.Item("115").Enabled = False
+                                        oForm.Items.Item("17").Enabled = True
+                                        oForm.Items.Item("84").Enabled = True
+                                    End If
+
+                                    If 1 = 1 Then
+                                        Dim strFromDate, strToDate, strRentType As String
+                                        Dim dtFromDate, dttoDate As Date
+                                        Dim intNoofDays As Double = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "115"))
+                                        strFromDate = oApplication.Utilities.getEdittextvalue(oForm, "4")
+                                        strToDate = oApplication.Utilities.getEdittextvalue(oForm, "6")
+                                        oCombo = oForm.Items.Item("111").Specific
+                                        strRentType = oCombo.Selected.Value
+                                        If strFromDate <> "" Then
+                                            dtFromDate = oApplication.Utilities.GetDateTimeValue(strFromDate)
+                                        End If
+                                        If strToDate <> "" Then
+                                            dttoDate = oApplication.Utilities.GetDateTimeValue(strToDate)
+                                        End If
+                                        If strFromDate <> "" And strToDate <> "" Then
+                                            Dim intNoofMonths As Integer
+                                            '  intNoofMonths = DateDiff(DateInterval.Month, dtFromDate, dttoDate)
+                                            Select Case strRentType
+                                                Case "D" '
+                                                    If intNoofDays = 0 Then
+                                                        intNoofDays = 1
+                                                    End If
+                                                    Do Until dtFromDate >= dttoDate
+                                                        intNoofMonths = intNoofMonths + 1
+                                                        dtFromDate = DateAdd(DateInterval.Day, intNoofDays, dtFromDate)
+                                                    Loop
+                                                Case "W"
+                                                    Do Until dtFromDate >= dttoDate
+                                                        intNoofMonths = intNoofMonths + 1
+                                                        dtFromDate = DateAdd(DateInterval.Day, 7, dtFromDate)
+                                                    Loop
+                                                Case "M"
+                                                    Do Until dtFromDate >= dttoDate
+                                                        intNoofMonths = intNoofMonths + 1
+                                                        dtFromDate = DateAdd(DateInterval.Month, 1, dtFromDate)
+                                                    Loop
+                                                Case "Q"
+                                                    Do Until dtFromDate >= dttoDate
+                                                        intNoofMonths = intNoofMonths + 1
+                                                        dtFromDate = DateAdd(DateInterval.Month, 3, dtFromDate)
+                                                    Loop
+                                                Case "S"
+                                                    Do Until dtFromDate >= dttoDate
+                                                        intNoofMonths = intNoofMonths + 1
+                                                        dtFromDate = DateAdd(DateInterval.Month, 6, dtFromDate)
+                                                    Loop
+                                                Case "A"
+                                                    Do Until dtFromDate >= dttoDate
+                                                        intNoofMonths = intNoofMonths + 1
+                                                        dtFromDate = DateAdd(DateInterval.Year, 1, dtFromDate)
+                                                    Loop
+                                            End Select
+                                            'Do Until dtFromDate >= dttoDate
+                                            '    intNoofMonths = intNoofMonths + 1
+                                            '    dtFromDate = DateAdd(DateInterval.Month, 1, dtFromDate)
+                                            'Loop
+                                            If intNoofMonths = 0 Then
+                                                intNoofMonths = 1
+                                            End If
+                                            ' oApplication.Utilities.setEdittextvalue(oForm, "28", DateDiff(DateInterval.Month, dtFromDate, dttoDate))
+                                            oApplication.Utilities.setEdittextvalue(oForm, "28", intNoofMonths)
+                                            Dim dblNoMonth, dblAnnual, dblMonth As Double
+                                            dblNoMonth = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "28"))
+                                            dblAnnual = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "17"))
+                                            dblMonth = dblAnnual / dblNoMonth
+                                            oApplication.Utilities.setEdittextvalue(oForm, "84", dblMonth)
+                                            dblMonth = dblAnnual / 12
+                                            oApplication.Utilities.setEdittextvalue(oForm, "220", dblMonth)
+                                        End If
                                     End If
                                 End If
 
@@ -2087,6 +2330,8 @@ Public Class clsTenContracts
                                                 dtDate = DateAdd(DateInterval.Month, 6, dtDate)
                                                 strMonth = "'" & strMonth & "','" & MonthName(dtDate.Month) & "'"
                                             Case "Y"
+                                                strMonth = "'" & MonthName(dtDate.Month) & "'"
+                                            Case "O"
                                                 strMonth = "'" & MonthName(dtDate.Month) & "'"
                                         End Select
                                         oApplication.Utilities.SetMatrixValues(oMatrix, "V_8", pVal.Row, strMonth)

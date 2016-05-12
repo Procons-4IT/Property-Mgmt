@@ -1,21 +1,5 @@
-17-11-2014 11:23--> Processing Invoice Posting : Month  : December  - Year : 2014
-17-11-2014 11:23--> Processing Contract Number : CR3121_1
-17-11-2014 11:23--> Invoice created successfully Contract Number : CR3121_1 Invoice Number 1335
-17-11-2014 11:23--> Processing Contract Number : CR3196_1
-17-11-2014 11:23--> Invoice created successfully Contract Number : CR3196_1 Invoice Number 1336
-17-11-2014 11:23--> Processing Contract Number : CR3621_1
-17-11-2014 11:23--> Invoice created successfully Contract Number : CR3621_1 Invoice Number 1337
-17-11-2014 11:23--> Processing Contract Number : CR3624_1
-17-11-2014 11:23--> Invoice created successfully Contract Number : CR3624_1 Invoice Number 1338
-17-11-2014 11:23--> Processing Contract Number : CR3628_1
-17-11-2014 11:23--> Invoice created successfully Contract Number : CR3628_1 Invoice Number 1339
-17-11-2014 11:23--> Processing Contract Number : CR3635_1
-17-11-2014 11:23--> Invoice created successfully Contract Number : CR3635_1 Invoice Number 1340
-17-11-2014 11:23--> Processing Contract Number : CR3636_1
-17-11-2014 11:23--> Invoice created successfully Contract Number : CR3636_1 Invoice Number 1341
-17-11-2014 11:23--> Processing Contract Number : CR3653_1
-17-11-2014 11:23--> Invoice created successfully Contract Number : CR3653_1 Invoice Number 1342
-17-11-2014 11:23--> Processing Contract Number : CR3663_1
-17-11-2014 11:23--> Invoice created successfully Contract Number : CR3663_1 Invoice Number 1343
-17-11-2014 11:23--> Processing Contract Number : CR3671_1
-17-11-2014 11:23--> Invoice created successfully Contract Number : CR3671_1 Invoice Number 1344
+11-05-2016 03:50--> Processing Invoice Posting : Month  : January  - Year : 2016
+11-05-2016 03:50--> Processing Contract Number : CR0004_1
+11-05-2016 03:50--> Invoice created successfully Contract Number : CR0004_1 Invoice Number 25
+11-05-2016 03:50--> Processing Contract Number : CR0003_2
+11-05-2016 03:50--> Invoice created successfully Contract Number : CR0003_2 Invoice Number 26

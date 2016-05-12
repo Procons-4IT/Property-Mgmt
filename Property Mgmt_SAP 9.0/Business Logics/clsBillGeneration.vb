@@ -414,13 +414,13 @@ Public Class clsBillGeneration
 
                     strExistingBills = "Select U_ContractID from [@Z_OBILL] where U_INVOICED='Y' and  U_Month=" & intMonth & " and U_Year=" & intYear & " and U_UNITCODE IN " & strunitCondition1
 
-                    strSQL = "SELECT T0.[DocEntry], T0.[U_Z_UNITCODE], T1.[U_Z_SPACE], T0.[U_Z_TENCODE], T0.[U_Z_ANNUALRENT], T0.[U_Z_PAYTRMS], T0.[U_Z_CHGMONTH],T0.[U_Z_ANNUALRENT]/T0.[U_Z_CHGMONTH],CASE T0.U_Z_TYPE  when 'T' then T0.U_Z_ACCTCODE1 else T0.U_Z_ACCTCODE1  end  ,'N', 0.000,0.000 ,T0.[U_Z_ConNo] 'ContrctID' ,T0.U_Z_ProType 'PropertyType',T0.U_Z_CommAc 'CommissionAccount',T0.U_Z_Comm 'ComPer', T0.U_Z_OwnerCode 'Owner' ,T0.U_Z_SeqNo 'Seq' ,T0.U_Z_CntNo ,T1.U_Z_ExtProNo,isnull(T0.U_Z_IsCommission,'N') 'IsComReq',T1.U_Z_PROPCODE, 'Property' FROM [dbo].[@Z_CONTRACT]  T0  inner Join  [dbo].[@Z_PROPUNIT]  T1 "
+                    strSQL = "SELECT T0.[DocEntry], T0.[U_Z_UNITCODE],  T1.[U_Z_SPACE], T0.[U_Z_TENCODE], T0.[U_Z_ANNUALRENT], T0.[U_Z_PAYTRMS], T0.[U_Z_CHGMONTH],T0.[U_Z_ANNUALRENT]/T0.[U_Z_CHGMONTH],CASE T0.U_Z_TYPE  when 'T' then T0.U_Z_ACCTCODE1 else T0.U_Z_ACCTCODE1  end  ,'N', 0.000,0.000 ,T0.[U_Z_ConNo] 'ContrctID' ,T0.U_Z_ProType 'PropertyType',T0.U_Z_CommAc 'CommissionAccount',T0.U_Z_Comm 'ComPer', T0.U_Z_OwnerCode 'Owner' ,T0.U_Z_SeqNo 'Seq' ,T0.U_Z_CntNo ,T1.U_Z_ExtProNo,isnull(T0.U_Z_IsCommission,'N') 'IsComReq',T1.U_Z_PROPCODE, 'Property' ,T1.[U_Z_PROPDESC],T0.[U_Z_RENTTYPE],T0.[U_Z_MRent] FROM [dbo].[@Z_CONTRACT]  T0  inner Join  [dbo].[@Z_PROPUNIT]  T1 "
                     strSQL = strSQL & " on T1.[U_Z_PROITEMCODE]=T0.[U_Z_UNITCODE]  inner Join OCRD T2 on T2.Cardcode=T0.U_Z_TENCODE where isnull(T0.U_Z_STATUS,'PEN')='AGR'  and  (" & strProperty & " and " & strPropertyUnit & ")  and ( ('" & strStartDate & "'  between (T0.U_Z_Startdate) and (T0.U_Z_EndDate))"
                     strSQL = strSQL & ") and T0.DocEntry not in (" & strExistingBills & ")"
 
 
 
-                    strSQL = strSQL & " Union  SELECT T0.[DocEntry], T0.[U_Z_UNITCODE], T1.[U_Z_SPACE], T0.[U_Z_TENCODE], T0.[U_Z_ANNUALRENT], T0.[U_Z_PAYTRMS], T0.[U_Z_CHGMONTH],T0.[U_Z_ANNUALRENT]/T0.[U_Z_CHGMONTH],CASE T0.U_Z_TYPE  when 'T' then T0.U_Z_ACCTCODE1 else T0.U_Z_ACCTCODE1  end  ,'N', 0.000,0.000 ,T0.[U_Z_ConNo] 'ContrctID' ,T0.U_Z_ProType 'PropertyType',T0.U_Z_CommAc 'CommissionAccount',T0.U_Z_Comm 'ComPer', T0.U_Z_OwnerCode 'Owner' ,T0.U_Z_SeqNo 'Seq' ,T0.U_Z_CntNo,T1.U_Z_ExtProNo ,isnull(T0.U_Z_IsCommission,'N') 'IsComReq',T1.U_Z_PROPCODE, 'Property' FROM [dbo].[@Z_CONTRACT]  T0  inner Join  [dbo].[@Z_PROPUNIT]  T1 "
+                    strSQL = strSQL & " Union  SELECT T0.[DocEntry], T0.[U_Z_UNITCODE], T1.[U_Z_SPACE], T0.[U_Z_TENCODE], T0.[U_Z_ANNUALRENT], T0.[U_Z_PAYTRMS], T0.[U_Z_CHGMONTH],T0.[U_Z_ANNUALRENT]/T0.[U_Z_CHGMONTH],CASE T0.U_Z_TYPE  when 'T' then T0.U_Z_ACCTCODE1 else T0.U_Z_ACCTCODE1  end  ,'N', 0.000,0.000 ,T0.[U_Z_ConNo] 'ContrctID' ,T0.U_Z_ProType 'PropertyType',T0.U_Z_CommAc 'CommissionAccount',T0.U_Z_Comm 'ComPer', T0.U_Z_OwnerCode 'Owner' ,T0.U_Z_SeqNo 'Seq' ,T0.U_Z_CntNo,T1.U_Z_ExtProNo ,isnull(T0.U_Z_IsCommission,'N') 'IsComReq',T1.U_Z_PROPCODE, 'Property',T1.[U_Z_PROPDESC],T0.[U_Z_RENTTYPE],T0.[U_Z_MRent]  FROM [dbo].[@Z_CONTRACT]  T0  inner Join  [dbo].[@Z_PROPUNIT]  T1 "
                     strSQL = strSQL & " on T1.[U_Z_PROITEMCODE]=T0.[U_Z_UNITCODE]  inner Join OCRD T2 on T2.Cardcode=T0.U_Z_TENCODE where isnull(T0.U_Z_STATUS,'PEN')='AGR'  and  (" & strProperty & " and " & strPropertyUnit & ")  and "
                     strSQL = strSQL & "  ('" & strEndDate & "'  between (T0.U_Z_Startdate) and (T0.U_Z_EndDate)) and T0.DocEntry not in (" & strExistingBills & ")"
 
@@ -450,7 +450,22 @@ Public Class clsBillGeneration
                                 dblSpace = 1
                             End If
                         End If
-
+                        Select Case oTemp1.Fields.Item("U_Z_RENTTYPE").Value
+                            Case "W"
+                                oUserTable.UserFields.Fields.Item("U_RenType").Value = "Weekly"
+                            Case "D"
+                                oUserTable.UserFields.Fields.Item("U_RenType").Value = "Daily"
+                            Case "M"
+                                oUserTable.UserFields.Fields.Item("U_RenType").Value = "Monthly"
+                            Case "Q"
+                                oUserTable.UserFields.Fields.Item("U_RenType").Value = "Quarterly"
+                            Case "S"
+                                oUserTable.UserFields.Fields.Item("U_RenType").Value = "Semi Annual"
+                            Case "A"
+                                oUserTable.UserFields.Fields.Item("U_RenType").Value = "Annually"
+                        End Select
+                        oUserTable.UserFields.Fields.Item("U_Z_MRent").Value = oTemp1.Fields.Item("U_Z_MRent").Value
+                        oUserTable.UserFields.Fields.Item("U_ProName").Value = oTemp1.Fields.Item("U_Z_PROPDESC").Value
                         oUserTable.UserFields.Fields.Item("U_DocDate").Value = dtPostDate
                         oUserTable.UserFields.Fields.Item("U_Month").Value = intMonth
                         oUserTable.UserFields.Fields.Item("U_Year").Value = intYear
@@ -473,11 +488,17 @@ Public Class clsBillGeneration
                         oUserTable.UserFields.Fields.Item("U_ChgMonth").Value = oTemp1.Fields.Item(6).Value
                         Dim dblMonthRent, dblCommPer, dblCommissionAmount As Double
                         Dim oRec1 As SAPbobsCOM.Recordset
+                        Dim blnInstallmentExists As Boolean = False
                         oRec1 = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
                         oRec1.DoQuery("Select * from [@Z_CONINS] where U_Z_ConID=" & intDocEntry & " and U_Z_Month=" & intMonth & " and U_Z_Year=" & intYear)
                         If oRec1.RecordCount > 0 Then
                             dblMonthRent = oRec1.Fields.Item("U_Z_Amount").Value
+                            oUserTable.UserFields.Fields.Item("U_Z_StartDate1").Value = oRec1.Fields.Item("U_Z_StartDate1").Value
+                            oUserTable.UserFields.Fields.Item("U_Z_EndDate1").Value = oRec1.Fields.Item("U_Z_EndDate1").Value
+                            oUserTable.UserFields.Fields.Item("U_Z_InsRef").Value = oRec1.Fields.Item("Code").Value
+                            blnInstallmentExists = True
                         Else
+                            blnInstallmentExists = False
                             dblMonthRent = oTemp1.Fields.Item(7).Value
                         End If
                         dblCommPer = oTemp1.Fields.Item("ComPer").Value
@@ -485,8 +506,12 @@ Public Class clsBillGeneration
                         If oTemp1.Fields.Item("IsComReq").Value = "N" Then
                             dblCommissionAmount = 0
                         End If
+                        Dim oTe12 As SAPbobsCOM.Recordset
                         'T0.Z_ProType 'PropertyType',T0.U_Z_CommAc 'CommissionAccount',T0.U_Z_ConNo 'ComPer', T0.U_Z_OwnerCode 'Owner' 
                         If oTemp1.Fields.Item("PropertyType").Value = "A" Then
+                            oTe12 = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+                            oTe12.DoQuery("Select * from OCRD where CardCode='" & oTemp1.Fields.Item(3).Value & "'")
+                            oUserTable.UserFields.Fields.Item("U_CardName").Value = oTe12.Fields.Item("CardName").Value
                             oUserTable.UserFields.Fields.Item("U_CardCode").Value = oTemp1.Fields.Item(3).Value
                             oUserTable.UserFields.Fields.Item("U_MonthRent").Value = dblMonthRent ' oTemp1.Fields.Item(7).Value
                             oUserTable.UserFields.Fields.Item("U_RentGL").Value = oTemp1.Fields.Item(8).Value
@@ -497,6 +522,10 @@ Public Class clsBillGeneration
                             oUserTable.UserFields.Fields.Item("U_OwnerCode").Value = oTemp1.Fields.Item("Owner").Value
                             oUserTable.UserFields.Fields.Item("U_Z_ProType").Value = "A"
                         Else
+                            oTe12 = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+                            oTe12.DoQuery("Select * from OCRD where CardCode='" & oTemp1.Fields.Item(3).Value & "'")
+                            oUserTable.UserFields.Fields.Item("U_CardName").Value = oTe12.Fields.Item("CardName").Value
+
                             oUserTable.UserFields.Fields.Item("U_CardCode").Value = oTemp1.Fields.Item(3).Value
                             oUserTable.UserFields.Fields.Item("U_MonthRent").Value = dblMonthRent ' oTemp1.Fields.Item(7).Value
                             oUserTable.UserFields.Fields.Item("U_Commission").Value = dblCommissionAmount
@@ -510,76 +539,69 @@ Public Class clsBillGeneration
 
                         oUserTable.UserFields.Fields.Item("U_Expenses").Value = 0
                         oUserTable.UserFields.Fields.Item("U_Invoiced").Value = "N" 'oTemp.Fields.Item().Value
-                        If oUserTable.Add() <> 0 Then
-                            oApplication.Utilities.Message(oApplication.Company.GetLastErrorDescription, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
-                            Committrans("Cancel")
-                            Return False
-                        Else
-                            blnLineExists = True
-                            strRefCode = strCode
-                            Dim strMonths As String
-                            otemp2.DoQuery("select U_Z_CODE,U_Z_NAME,U_Z_GLACC,U_Z_TYPE,U_Z_RATE,U_Z_Months,U_Z_Frequency from [@Z_CONTRACT1] where DocEntry=" & CInt(strECode))
-                            For intRow2 As Integer = 0 To otemp2.RecordCount - 1
-                                oUsertable1 = oApplication.Company.UserTables.Item("Z_OBILL1")
-                                strCode = oApplication.Utilities.getMaxCode("@Z_OBILL1", "Code")
-                                strMonths = otemp2.Fields.Item(5).Value
-                                If strMonths.Contains(MonthName(intMonth)) Then
-                                    oUsertable1.Code = strCode
-                                    oUsertable1.Name = strCode & "N"
-                                    strECode = oTemp1.Fields.Item(0).Value
-                                    oUsertable1.UserFields.Fields.Item("U_Z_RefNo").Value = strRefCode
-                                    oUsertable1.UserFields.Fields.Item("U_Month").Value = intMonth
-                                    oUsertable1.UserFields.Fields.Item("U_Year").Value = intYear
-                                    oUsertable1.UserFields.Fields.Item("U_Z_CODE").Value = otemp2.Fields.Item(0).Value
-                                    oUsertable1.UserFields.Fields.Item("U_Z_NAME").Value = otemp2.Fields.Item(1).Value
-                                    oUsertable1.UserFields.Fields.Item("U_Z_GLACC").Value = otemp2.Fields.Item(2).Value
-                                    oUsertable1.UserFields.Fields.Item("U_Z_TYPE").Value = otemp2.Fields.Item(3).Value
-                                    Dim otest As SAPbobsCOM.Recordset
-                                    otest = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
-                                    Dim dblRate As Double
-                                    If otemp2.Fields.Item(3).Value = "S" Then
-                                        otest.DoQuery("Select isnull(U_Z_RATE,0) from [@Z_OBILL2] where U_Month=" & intMonth & " and U_Year=" & intYear & " and U_Z_CODE='" & otemp2.Fields.Item(0).Value & "'")
-                                        dblRate = oApplication.Utilities.getDocumentQuantity(otest.Fields.Item(0).Value)
-                                        oUsertable1.UserFields.Fields.Item("U_Z_RATE").Value = otest.Fields.Item(0).Value
-                                        dblAmount = dblSpace * dblRate
-                                    Else
-                                        dblRate = oApplication.Utilities.getDocumentQuantity(oTemp1.Fields.Item(4).Value)
-                                        oUsertable1.UserFields.Fields.Item("U_Z_RATE").Value = oTemp1.Fields.Item(4).Value
-                                        dblAmount = CDbl(otemp2.Fields.Item(4).Value)
+                        If blnInstallmentExists = True Then
+                            If oUserTable.Add() <> 0 Then
+                                oApplication.Utilities.Message(oApplication.Company.GetLastErrorDescription, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
+                                Committrans("Cancel")
+                                Return False
+                            Else
+                                blnLineExists = True
+                                strRefCode = strCode
+                                Dim strMonths As String
+                                otemp2.DoQuery("select U_Z_CODE,U_Z_NAME,U_Z_GLACC,U_Z_TYPE,U_Z_RATE,U_Z_Months,U_Z_Frequency from [@Z_CONTRACT1] where DocEntry=" & CInt(strECode))
+                                For intRow2 As Integer = 0 To otemp2.RecordCount - 1
+                                    oUsertable1 = oApplication.Company.UserTables.Item("Z_OBILL1")
+                                    strCode = oApplication.Utilities.getMaxCode("@Z_OBILL1", "Code")
+                                    strMonths = otemp2.Fields.Item(5).Value
+                                    If strMonths.Contains(MonthName(intMonth)) Then
+                                        oUsertable1.Code = strCode
+                                        oUsertable1.Name = strCode & "N"
+                                        strECode = oTemp1.Fields.Item(0).Value
+                                        oUsertable1.UserFields.Fields.Item("U_Z_RefNo").Value = strRefCode
+                                        oUsertable1.UserFields.Fields.Item("U_Month").Value = intMonth
+                                        oUsertable1.UserFields.Fields.Item("U_Year").Value = intYear
+                                        oUsertable1.UserFields.Fields.Item("U_Z_CODE").Value = otemp2.Fields.Item(0).Value
+                                        oUsertable1.UserFields.Fields.Item("U_Z_NAME").Value = otemp2.Fields.Item(1).Value
+                                        oUsertable1.UserFields.Fields.Item("U_Z_GLACC").Value = otemp2.Fields.Item(2).Value
+                                        oUsertable1.UserFields.Fields.Item("U_Z_TYPE").Value = otemp2.Fields.Item(3).Value
+                                        Dim otest As SAPbobsCOM.Recordset
+                                        otest = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+                                        Dim dblRate As Double
+                                        If otemp2.Fields.Item(3).Value = "S" Then
+                                            otest.DoQuery("Select isnull(U_Z_RATE,0) from [@Z_OBILL2] where U_Month=" & intMonth & " and U_Year=" & intYear & " and U_Z_CODE='" & otemp2.Fields.Item(0).Value & "'")
+                                            dblRate = oApplication.Utilities.getDocumentQuantity(otest.Fields.Item(0).Value)
+                                            oUsertable1.UserFields.Fields.Item("U_Z_RATE").Value = otest.Fields.Item(0).Value
+                                            dblAmount = dblSpace * dblRate
+                                        Else
+                                            dblRate = oApplication.Utilities.getDocumentQuantity(oTemp1.Fields.Item(4).Value)
+                                            oUsertable1.UserFields.Fields.Item("U_Z_RATE").Value = oTemp1.Fields.Item(4).Value
+                                            dblAmount = CDbl(otemp2.Fields.Item(4).Value)
+                                        End If
+                                        oUsertable1.UserFields.Fields.Item("U_Z_AMOUNT").Value = dblAmount
+                                        If oUsertable1.Add <> 0 Then
+                                            oApplication.Utilities.Message(oApplication.Company.GetLastErrorDescription, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
+                                            Committrans("Cancel")
+                                            Return False
+                                        End If
                                     End If
-                                    oUsertable1.UserFields.Fields.Item("U_Z_AMOUNT").Value = dblAmount
-                                    If oUsertable1.Add <> 0 Then
-                                        oApplication.Utilities.Message(oApplication.Company.GetLastErrorDescription, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
-                                        Committrans("Cancel")
-                                        Return False
-                                    End If
-                                End If
-                                otemp2.MoveNext()
-                            Next
-                            otemp2.DoQuery("Select sum(U_Z_AMOUNT) from [@Z_OBILL1] where U_Z_RefNo='" & strRefCode & "'")
-                            otemp2.DoQuery("UPdate [@Z_OBILL] set  U_Expenses='" & otemp2.Fields.Item(0).Value & "' where Code='" & strRefCode & "'")
-                            otemp2.DoQuery("UPdate [@Z_OBILL] set U_Total=isnull(U_MonthRent,0)+ isnull(U_Expenses,0)  where Code='" & strRefCode & "'")
+                                    otemp2.MoveNext()
+                                Next
+                                otemp2.DoQuery("Select sum(U_Z_AMOUNT) from [@Z_OBILL1] where U_Z_RefNo='" & strRefCode & "'")
+                                otemp2.DoQuery("UPdate [@Z_OBILL] set  U_Expenses='" & otemp2.Fields.Item(0).Value & "' where Code='" & strRefCode & "'")
+                                otemp2.DoQuery("UPdate [@Z_OBILL] set U_Total=isnull(U_MonthRent,0)+ isnull(U_Expenses,0)  where Code='" & strRefCode & "'")
+                            End If
                         End If
                         oTemp1.MoveNext()
                     Next
-
                     oHeaderGrid.DataTable.ExecuteQuery("Select * from [@Z_OBILL] where  U_Month=" & intMonth & " and U_Year=" & intYear & " ORDER BY U_ContractID,U_INVOICED")
                     Dim strsql12 As String
                     Dim strunitCondition As String = "(Select T1.U_Z_PROITEMCODE from [@Z_PROPUNIT] T1 where " & strProperty & " and " & strPropertyUnit & ")"
                     Dim strunitCondition11 As String = "(Select T1.U_Z_ExtProNo from [@Z_PROPUNIT] T1 where " & strProperty & " and " & strPropertyUnit & ")"
-
-                    strsql12 = "SELECT T0.[Code], T0.[Name], T0.[U_YEAR], T0.[U_MONTH], T0.[U_CONTRACTID], T0.[U_CONTRACTNUMBER], T0.[U_SEQ], T0.[U_UNITCODE],T0.U_EXTUNITCODE , T0.[U_SPACE], T0.[U_CARDCODE], T0.[U_PAYTRMS], T0.[U_ANNUALRENT], T0.[U_CHGMONTH], T0.[U_MONTHRENT], T0.[U_RENTGL], T0.[U_EXPENSES], T0.[U_TOTAL], T0.[U_INVOICED], T0.[U_INVENTRY], T0.[U_INVNUMBER], T0.[U_Z_PROTYPE], T0.[U_REMARKS], T0.[U_COMPER], T0.[U_COMMISSION], T0.[U_COMMGL], T0.[U_OWNERCODE] FROM [dbo].[@Z_OBILL]  T0"
+                    strsql12 = "SELECT T0.[Code], T0.[Name], T0.[U_YEAR], T0.[U_MONTH], T0.[U_CONTRACTID], T0.[U_CONTRACTNUMBER], T0.[U_SEQ], T0.[U_UNITCODE],T0.[U_PRONAME] 'Description',T0.[U_RenType] 'Frequency',T0.U_EXTUNITCODE , T0.[U_SPACE], T0.[U_CARDCODE],T0.[U_CARDNAME] 'Customer Name', T0.[U_PAYTRMS], T0.[U_ANNUALRENT], T0.[U_CHGMONTH],T0.[U_Z_STARTDATE1] 'Start Date',U_Z_ENDDATE1 'End Date',[U_Z_MRent] 'Monthly Rental', T0.[U_MONTHRENT], T0.[U_RENTGL], T0.[U_EXPENSES], T0.[U_TOTAL], T0.[U_INVOICED], T0.[U_INVENTRY], T0.[U_INVNUMBER], T0.[U_Z_PROTYPE], T0.[U_REMARKS], T0.[U_COMPER], T0.[U_COMMISSION], T0.[U_COMMGL], T0.[U_OWNERCODE] FROM [dbo].[@Z_OBILL]  T0"
                     strsql12 = strsql12 & "  where  U_Month=" & intMonth & " and U_Year=" & intYear & " and (U_UNITCODE IN  " & strunitCondition & ")" '   or ( U_ExtUnitCode in " & strunitCondition11 & ")   ORDER BY U_ContractID"
-
-
-                    strsql12 = strsql12 & " Union  SELECT T0.[Code], T0.[Name], T0.[U_YEAR], T0.[U_MONTH], T0.[U_CONTRACTID], T0.[U_CONTRACTNUMBER], T0.[U_SEQ], T0.[U_UNITCODE],T0.U_EXTUNITCODE , T0.[U_SPACE], T0.[U_CARDCODE], T0.[U_PAYTRMS], T0.[U_ANNUALRENT], T0.[U_CHGMONTH], T0.[U_MONTHRENT], T0.[U_RENTGL], T0.[U_EXPENSES], T0.[U_TOTAL], T0.[U_INVOICED], T0.[U_INVENTRY], T0.[U_INVNUMBER], T0.[U_Z_PROTYPE], T0.[U_REMARKS], T0.[U_COMPER], T0.[U_COMMISSION], T0.[U_COMMGL], T0.[U_OWNERCODE] FROM [dbo].[@Z_OBILL]  T0"
+                    strsql12 = strsql12 & " Union  SELECT T0.[Code], T0.[Name], T0.[U_YEAR], T0.[U_MONTH], T0.[U_CONTRACTID], T0.[U_CONTRACTNUMBER], T0.[U_SEQ], T0.[U_UNITCODE],T0.[U_PRONAME] 'Description',T0.[U_RenType] 'Frequency',T0.U_EXTUNITCODE , T0.[U_SPACE], T0.[U_CARDCODE],T0.[U_CARDNAME] 'Customer Name', T0.[U_PAYTRMS], T0.[U_ANNUALRENT], T0.[U_CHGMONTH],T0.[U_Z_STARTDATE1] 'Start Date',U_Z_ENDDATE1 'End Date',[U_Z_MRent] 'Monthly Rental', T0.[U_MONTHRENT], T0.[U_RENTGL], T0.[U_EXPENSES], T0.[U_TOTAL], T0.[U_INVOICED], T0.[U_INVENTRY], T0.[U_INVNUMBER], T0.[U_Z_PROTYPE], T0.[U_REMARKS], T0.[U_COMPER], T0.[U_COMMISSION], T0.[U_COMMGL], T0.[U_OWNERCODE] FROM [dbo].[@Z_OBILL]  T0"
                     strsql12 = strsql12 & "  where  U_Month=" & intMonth & " and U_Year=" & intYear & " and  ( U_ExtUnitCode in " & strunitCondition11 & ")   ORDER BY U_ContractID"
-
-
                     oHeaderGrid.DataTable.ExecuteQuery(strsql12)
-
-
-
                     oLineGird.DataTable.ExecuteQuery("Select * from [@Z_OBILL1] where Code='xxxx'")
                     oExpGrid.DataTable.ExecuteQuery("Select * from [@Z_OBILL2]  where  U_Month=" & intMonth & " and U_Year=" & intYear)
                     Formatgrid(aForm, "Payroll")
@@ -745,15 +767,18 @@ Public Class clsBillGeneration
             otemp2 = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
             otemp3 = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
             otemp4 = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
+            otemp4.DoQuery("Select * from OBPL where MainBPL='Y'")
+            Dim intDefaultbranch As Integer
+            If blnMultiBranch = True Then
+                intDefaultbranch = otemp4.Fields.Item("BPLid").Value
+            End If
+
+
             If oApplication.Company.InTransaction() Then
                 oApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit)
             End If
             oApplication.Company.StartTransaction()
-
             Dim strunitCondition As String = "(Select T1.U_Z_PROITEMCODE from [@Z_PROPUNIT] T1 where " & strProperty & " and " & strPropertyUnit & ")"
-
-
-
             oTemp.DoQuery("Select * from [@Z_OBILL] where isnull(U_Invoiced,'N')='N' and U_Month=" & intMonth & " and U_Year=" & intYear & " and U_UNITCODE IN " & strunitCondition)
             Dim oDoc, oDoc2 As SAPbobsCOM.Documents
             Dim oDoc11, oDoc12 As SAPbobsCOM.Documents
@@ -761,6 +786,11 @@ Public Class clsBillGeneration
             Dim oBP As SAPbobsCOM.BusinessPartners
             oBP = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.oBusinessPartners)
             For intRow As Integer = 0 To oTemp.RecordCount - 1
+                Dim strJournalMemo As String
+                Dim dtInvoiceFrom, dtInvoiceTo As Date
+                dtInvoiceFrom = oTemp.Fields.Item("U_Z_STARTDATE1").Value
+                dtInvoiceTo = oTemp.Fields.Item("U_Z_ENDDATE1").Value
+                strJournalMemo = "Invoice Period From : " & dtInvoiceFrom.ToString("dd-MM-yyyy") & " To " & dtInvoiceTo.ToString("dd-MM-yyyy")
                 Try
                     aForm.Items.Item("18").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
                 Catch ex As Exception
@@ -780,10 +810,17 @@ Public Class clsBillGeneration
                 WriteErrorlog("Processing Contract Number : " & oTemp.Fields.Item("U_ContractNumber").Value, sFailureLog)
                 WriteErrorlog("Processing Contract Number : " & oTemp.Fields.Item("U_ContractNumber").Value, sPath)
                 oDoc.CardCode = strCardCode ' oTemp.Fields.Item("U_CARDCODE").Value
+                If blnMultiBranch = True Then
+                    oDoc.BPL_IDAssignedToInvoice = intDefaultbranch
+                End If
+
                 oDoc.UserFields.Fields.Item("U_Z_CONTNUMBER").Value = oTemp.Fields.Item("U_CntNo").Value
                 oDoc.UserFields.Fields.Item("U_Z_CONTID").Value = oTemp.Fields.Item("U_ContractID").Value
                 oDoc.UserFields.Fields.Item("U_Z_CNTNUMBER").Value = oTemp.Fields.Item("U_ContractNumber").Value
                 oDoc.UserFields.Fields.Item("U_SEQ").Value = oTemp.Fields.Item("U_Seq").Value
+                oDoc.UserFields.Fields.Item("U_Z_STARTDATE").Value = oTemp.Fields.Item("U_Z_STARTDATE1").Value
+                oDoc.UserFields.Fields.Item("U_Z_ENDDATE").Value = oTemp.Fields.Item("U_Z_ENDDATE1").Value
+                oDoc.JournalMemo = strJournalMemo
                 oDoc.DocDate = dtPostDate ' Now.Date
                 Dim st As String = "Select isnull(U_Z_PropCode,''),isnull(U_Z_CostCenter,'') from [@Z_PROPUNIT] where U_Z_ProItemCode='" & oTemp.Fields.Item("U_UNITCODE").Value & "'"
                 otemp4.DoQuery("Select isnull(U_Z_PropCode,''),isnull(U_Z_CostCenter,'') from [@Z_PROPUNIT] where (U_Z_ExtProNo='" & oTemp.Fields.Item("U_UNITCODE").Value & "' or  U_Z_ProItemCode='" & oTemp.Fields.Item("U_UNITCODE").Value & "')")
@@ -893,6 +930,7 @@ Public Class clsBillGeneration
                                 oApplication.Company.GetNewObjectCode(strDocNum)
                                 otemp2.DoQuery("Select * from OINV where Docentry=" & strDocNum)
                                 otemp3.DoQuery("Update [@Z_OBILL] set U_Invoiced='Y' , U_InvEntry=" & strDocNum & ",U_InvNumber=" & otemp2.Fields.Item("DocNum").Value & " where Code='" & oTemp.Fields.Item("Code").Value & "'")
+                                otemp3.DoQuery("Update [@Z_CONINS] set U_Z_Status='Y' where Code='" & oTemp.Fields.Item("U_Z_InsRef").Value & "'")
                                 WriteErrorlog("Invoice created successfully Contract Number : " & oTemp.Fields.Item("U_ContractNumber").Value & " Invoice Number " & otemp2.Fields.Item("DocNum").Value, sPath)
                                 WriteErrorlog("Invoice created successfully Contract Number : " & oTemp.Fields.Item("U_ContractNumber").Value & " Invoice Number " & otemp2.Fields.Item("DocNum").Value, sFailureLog)
                                 'Commission Invoice posting for Tenant
@@ -902,10 +940,16 @@ Public Class clsBillGeneration
                                     strCardCode = oTemp.Fields.Item("U_OwnerCode").Value
                                     oDoc.UserFields.Fields.Item("U_Z_INVTYPE").Value = "O"
                                     oDoc.CardCode = strCardCode ' oTemp.Fields.Item("U_CARDCODE").Value
+                                    If blnMultiBranch = True Then
+                                        oDoc.BPL_IDAssignedToInvoice = intDefaultbranch
+                                    End If
                                     oDoc.UserFields.Fields.Item("U_Z_CONTNUMBER").Value = oTemp.Fields.Item("U_CntNo").Value
                                     oDoc.UserFields.Fields.Item("U_Z_CONTID").Value = oTemp.Fields.Item("U_ContractID").Value
                                     oDoc.UserFields.Fields.Item("U_Z_CNTNUMBER").Value = oTemp.Fields.Item("U_ContractNumber").Value
                                     oDoc.UserFields.Fields.Item("U_SEQ").Value = oTemp.Fields.Item("U_Seq").Value
+                                    oDoc.UserFields.Fields.Item("U_Z_STARTDATE").Value = oTemp.Fields.Item("U_Z_STARTDATE1").Value
+                                    oDoc.UserFields.Fields.Item("U_Z_ENDDATE").Value = oTemp.Fields.Item("U_Z_ENDDATE1").Value
+                                    oDoc.JournalMemo = strJournalMemo
                                     oDoc.DocDate = dtPostDate ' Now.Date
                                     otemp4.DoQuery("Select isnull(U_Z_PropCode,''),isnull(U_Z_CostCenter,'') from [@Z_PROPUNIT] where U_Z_ProItemCode='" & oTemp.Fields.Item("U_UNITCODE").Value & "'")
                                     oDoc.Project = otemp4.Fields.Item(0).Value
@@ -946,10 +990,16 @@ Public Class clsBillGeneration
                             'split expense into separte Invoice
                             oDoc2.DocType = SAPbobsCOM.BoDocumentTypes.dDocument_Service
                             oDoc2.CardCode = strCardCode ' oTemp.Fields.Item("U_CARDCODE").Value
+                            If blnMultiBranch = True Then
+                                oDoc2.BPL_IDAssignedToInvoice = intDefaultbranch
+                            End If
                             oDoc2.UserFields.Fields.Item("U_Z_CONTNUMBER").Value = oTemp.Fields.Item("U_CntNo").Value
                             oDoc2.UserFields.Fields.Item("U_Z_CONTID").Value = oTemp.Fields.Item("U_ContractID").Value
                             oDoc2.UserFields.Fields.Item("U_Z_CNTNUMBER").Value = oTemp.Fields.Item("U_ContractNumber").Value
                             oDoc2.UserFields.Fields.Item("U_SEQ").Value = oTemp.Fields.Item("U_Seq").Value
+                            oDoc2.UserFields.Fields.Item("U_Z_STARTDATE").Value = oTemp.Fields.Item("U_Z_STARTDATE1").Value
+                            oDoc2.UserFields.Fields.Item("U_Z_ENDDATE").Value = oTemp.Fields.Item("U_Z_ENDDATE1").Value
+                            oDoc2.JournalMemo = strJournalMemo
                             oDoc2.DocDate = dtPostDate ' Now.Date
                             Dim st1 As String = "Select isnull(U_Z_PropCode,''),isnull(U_Z_CostCenter,'') from [@Z_PROPUNIT] where U_Z_ProItemCode='" & oTemp.Fields.Item("U_UNITCODE").Value & "'"
                             otemp4.DoQuery("Select isnull(U_Z_PropCode,''),isnull(U_Z_CostCenter,'') from [@Z_PROPUNIT] where (U_Z_ExtProNo='" & oTemp.Fields.Item("U_UNITCODE").Value & "' or  U_Z_ProItemCode='" & oTemp.Fields.Item("U_UNITCODE").Value & "')")
@@ -968,7 +1018,8 @@ Public Class clsBillGeneration
                                 End If
                                 oDoc2.Lines.SetCurrentLine(intInvLines)
                                 oDoc2.Lines.AccountCode = oApplication.Utilities.getAccountCode(oTemp1.Fields.Item("U_Z_GLACC").Value)
-                                oDoc2.Lines.ItemDescription = "Monthly Expenses  : " & oTemp1.Fields.Item("U_Z_NAME").Value
+                                ' oDoc2.Lines.ItemDescription = "Monthly Expenses  : " & oTemp1.Fields.Item("U_Z_NAME").Value
+                                oDoc2.Lines.ItemDescription = oTemp1.Fields.Item("U_Z_NAME").Value
                                 oDoc2.Lines.LineTotal = oTemp1.Fields.Item("U_Z_AMOUNT").Value
                                 If strCostCenter <> "" Then
                                     oDoc2.Lines.CostingCode = strCostCenter
@@ -1007,7 +1058,8 @@ Public Class clsBillGeneration
                                 End If
                                 oDoc.Lines.SetCurrentLine(intInvLines)
                                 oDoc.Lines.AccountCode = oApplication.Utilities.getAccountCode(oTemp1.Fields.Item("U_Z_GLACC").Value)
-                                oDoc.Lines.ItemDescription = "Monthly Expenses  : " & oTemp1.Fields.Item("U_Z_NAME").Value
+                                ' oDoc.Lines.ItemDescription = "Monthly Expenses  : " & oTemp1.Fields.Item("U_Z_NAME").Value
+                                oDoc.Lines.ItemDescription = oTemp1.Fields.Item("U_Z_NAME").Value
                                 oDoc.Lines.LineTotal = oTemp1.Fields.Item("U_Z_AMOUNT").Value
                                 If strCostCenter <> "" Then
                                     oDoc.Lines.CostingCode = strCostCenter
@@ -1034,6 +1086,7 @@ Public Class clsBillGeneration
                                 oApplication.Company.GetNewObjectCode(strDocNum)
                                 otemp2.DoQuery("Select * from OINV where Docentry=" & strDocNum)
                                 otemp3.DoQuery("Update [@Z_OBILL] set U_Invoiced='Y' , U_InvEntry=" & strDocNum & ",U_InvNumber=" & otemp2.Fields.Item("DocNum").Value & " where Code='" & oTemp.Fields.Item("Code").Value & "'")
+                                otemp3.DoQuery("Update [@Z_CONINS] set U_Z_Status='Y' where Code='" & oTemp.Fields.Item("U_Z_InsRef").Value & "'")
                                 WriteErrorlog("Invoice created successfully Contract Number : " & oTemp.Fields.Item("U_ContractNumber").Value & " Invoice Number " & otemp2.Fields.Item("DocNum").Value, sPath)
                                 WriteErrorlog("Invoice created successfully Contract Number : " & oTemp.Fields.Item("U_ContractNumber").Value & " Invoice Number " & otemp2.Fields.Item("DocNum").Value, sFailureLog)
                                 'Commission Invoice posting for Tenant
@@ -1047,6 +1100,8 @@ Public Class clsBillGeneration
                                     oDoc.UserFields.Fields.Item("U_Z_CONTID").Value = oTemp.Fields.Item("U_ContractID").Value
                                     oDoc.UserFields.Fields.Item("U_Z_CNTNUMBER").Value = oTemp.Fields.Item("U_ContractNumber").Value
                                     oDoc.UserFields.Fields.Item("U_SEQ").Value = oTemp.Fields.Item("U_Seq").Value
+                                    oDoc.UserFields.Fields.Item("U_Z_STARTDATE").Value = oTemp.Fields.Item("U_Z_STARTDATE1").Value
+                                    oDoc.UserFields.Fields.Item("U_Z_ENDDATE").Value = oTemp.Fields.Item("U_Z_ENDDATE1").Value
                                     oDoc.DocDate = dtPostDate ' Now.Date
                                     otemp4.DoQuery("Select isnull(U_Z_PropCode,''),isnull(U_Z_CostCenter,'') from [@Z_PROPUNIT] where U_Z_ProItemCode='" & oTemp.Fields.Item("U_UNITCODE").Value & "'")
                                     oDoc.Project = otemp4.Fields.Item(0).Value
@@ -1089,7 +1144,7 @@ Public Class clsBillGeneration
                 End If
                 oTemp.MoveNext()
             Next
-           
+
             If oApplication.Company.InTransaction() Then
                 oApplication.Company.EndTransaction(SAPbobsCOM.BoWfTransOpt.wf_Commit)
             End If
@@ -1218,6 +1273,9 @@ Public Class clsBillGeneration
                 oDoc.UserFields.Fields.Item("U_Z_CONTID").Value = oTemp.Fields.Item("U_ContractID").Value
                 oDoc.UserFields.Fields.Item("U_Z_CNTNUMBER").Value = oTemp.Fields.Item("U_ContractNumber").Value
                 oDoc.UserFields.Fields.Item("U_SEQ").Value = oTemp.Fields.Item("U_Seq").Value
+                oDoc.UserFields.Fields.Item("U_Z_STARTDATE").Value = oTemp.Fields.Item("U_Z_STARTDATE1").Value
+                oDoc.UserFields.Fields.Item("U_Z_ENDDATE").Value = oTemp.Fields.Item("U_Z_ENDDATE1").Value
+
                 oDoc.DocDate = dtPostDate ' Now.Date
                 otemp4.DoQuery("Select isnull(U_Z_PropCode,''),isnull(U_Z_CostCenter,'') from [@Z_PROPUNIT] where U_Z_ProItemCode='" & oTemp.Fields.Item("U_UNITCODE").Value & "'")
                 oDoc.Project = otemp4.Fields.Item(0).Value
@@ -1227,9 +1285,6 @@ Public Class clsBillGeneration
                     'oDoc.UserFields.Fields.Item("U_Z_INVTYPE").Value = "O"
                     oDoc.UserFields.Fields.Item("U_Z_INVTYPE").Value = "T"
                 End If
-
-
-
                 Dim oDPI, oDOC1 As SAPbobsCOM.Documents
                 Dim intCount As Integer = 0
                 Dim aCode As Integer
@@ -1678,7 +1733,7 @@ Public Class clsBillGeneration
                 aGrid.Columns.Item("U_CONTRACTNUMBER").Editable = False
                 aGrid.Columns.Item("U_CHGMONTH").TitleObject.Caption = "Number of Months"
                 aGrid.Columns.Item("U_CHGMONTH").Visible = False
-                aGrid.Columns.Item("U_MONTHRENT").TitleObject.Caption = "Monthly Rental"
+                aGrid.Columns.Item("U_MONTHRENT").TitleObject.Caption = "Rental Period Amount"
                 aGrid.Columns.Item("U_RENTGL").TitleObject.Caption = "Account Code"
                 oEditTextColumn = aGrid.Columns.Item("U_RENTGL")
                 oEditTextColumn.LinkedObjectType = "1"

@@ -12,6 +12,11 @@ Public Class clsStart
                 With oApplication.Company.GetCompanyService
                     CompanyDecimalSeprator = .GetAdminInfo.DecimalSeparator
                     CompanyThousandSeprator = .GetAdminInfo.ThousandsSeparator
+                    If .GetAdminInfo.EnableBranches = SAPbobsCOM.BoYesNoEnum.tNO Then
+                        blnMultiBranch = False
+                    Else
+                        blnMultiBranch = True
+                    End If
                 End With
             Catch ex As Exception
                 MessageBox.Show(ex.Message, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly)
