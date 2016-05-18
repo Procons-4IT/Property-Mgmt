@@ -317,7 +317,7 @@ Public Class clsRenewal
                         oGeneralData1.SetProperty("U_Z_TYPE", oGeneralData.GetProperty("U_Z_TYPE"))
                         oGeneralData1.SetProperty("U_Z_COMMAC", oGeneralData.GetProperty("U_Z_COMMAC"))
                         oChildren1 = oGeneralData1.Child("Z_CONTRACT1")
-                        otestRs.DoQuery("Select * from [@Z_CONTRACT1] where DocEntry=" & CInt(strCode))
+                        otestRs.DoQuery("Select * from [@Z_CONTRACT1] where isnull(U_Z_Renewal,'N')='N' and DocEntry=" & CInt(strCode))
                         For inlloop As Integer = 0 To otestRs.RecordCount - 1
                             oChild = oChildren1.Add()
                             oChild.SetProperty("U_Z_EXPREFCODEREF", otestRs.Fields.Item("U_Z_EXPREFCODEREF").Value)

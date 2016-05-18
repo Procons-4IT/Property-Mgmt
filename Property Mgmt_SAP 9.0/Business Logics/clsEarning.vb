@@ -120,7 +120,22 @@ Public Class clsEarning
         oCombobox.DisplayType = SAPbouiCOM.BoComboDisplayType.cdt_both
 
         agrid.Columns.Item(6).TitleObject.Caption = "Amount"
+        agrid.Columns.Item("U_Z_RENEWAL").TitleObject.Caption = "Exclude in Renewal"
+        agrid.Columns.Item("U_Z_RENEWAL").Type = SAPbouiCOM.BoGridColumnType.gct_CheckBox
         'oCheckbox = agrid.Columns.Item(5)
+        agrid.Columns.Item("U_Z_FREQUENCY").TitleObject.Caption = "Frequency"
+        agrid.Columns.Item("U_Z_FREQUENCY").Type = SAPbouiCOM.BoGridColumnType.gct_ComboBox
+        oCombobox = agrid.Columns.Item("U_Z_FREQUENCY")
+        For intRow As Integer = oCombobox.ValidValues.Count - 1 To 0 Step -1
+            oCombobox.ValidValues.Remove(intRow, SAPbouiCOM.BoSearchKey.psk_Index)
+        Next
+        'M,Q,H,Y,O
+        oCombobox.ValidValues.Add("M", "Monthly")
+        oCombobox.ValidValues.Add("Q", "Quarterly")
+        oCombobox.ValidValues.Add("H", "Half yearly")
+        oCombobox.ValidValues.Add("Y", "Yearly")
+        oCombobox.ValidValues.Add("O", "One Time")
+        oCombobox.DisplayType = SAPbouiCOM.BoComboDisplayType.cdt_both
         'oCheckbox.Checked = True
         agrid.AutoResizeColumns()
         agrid.SelectionMode = SAPbouiCOM.BoMatrixSelect.ms_Single
@@ -182,6 +197,15 @@ Public Class clsEarning
                     oUserTable.UserFields.Fields.Item("U_Z_GLACC").Value = (oGrid.DataTable.GetValue(4, intRow))
                     oUserTable.UserFields.Fields.Item("U_Z_TYPE").Value = strESocial
                     oUserTable.UserFields.Fields.Item("U_Z_RATE").Value = strETax
+
+                    oCombobox = oGrid.Columns.Item("U_Z_FREQUENCY")
+                    oUserTable.UserFields.Fields.Item("U_Z_FREQUENCY").Value = oCombobox.GetSelectedValue(intRow).Value
+                    OCHECKBOXCOLUMN = oGrid.Columns.Item("U_Z_RENEWAL")
+                    If OCHECKBOXCOLUMN.IsChecked(intRow) Then
+                        oUserTable.UserFields.Fields.Item("U_Z_RENEWAL").Value = "Y"
+                    Else
+                        oUserTable.UserFields.Fields.Item("U_Z_RENEWAL").Value = "N"
+                    End If
                     If oUserTable.Add() <> 0 Then
                         oApplication.Utilities.Message(oApplication.Company.GetLastErrorDescription, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
                         Committrans("Cancel")
@@ -197,6 +221,14 @@ Public Class clsEarning
                         oUserTable.UserFields.Fields.Item("U_Z_GLACC").Value = (oGrid.DataTable.GetValue(4, intRow))
                         oUserTable.UserFields.Fields.Item("U_Z_TYPE").Value = strESocial
                         oUserTable.UserFields.Fields.Item("U_Z_RATE").Value = strETax
+                        OCHECKBOXCOLUMN = oGrid.Columns.Item("U_Z_RENEWAL")
+                        oCombobox = oGrid.Columns.Item("U_Z_FREQUENCY")
+                        oUserTable.UserFields.Fields.Item("U_Z_FREQUENCY").Value = oCombobox.GetSelectedValue(intRow).Value
+                        If OCHECKBOXCOLUMN.IsChecked(intRow) Then
+                            oUserTable.UserFields.Fields.Item("U_Z_RENEWAL").Value = "Y"
+                        Else
+                            oUserTable.UserFields.Fields.Item("U_Z_RENEWAL").Value = "N"
+                        End If
                         If oUserTable.Update() <> 0 Then
                             oApplication.Utilities.Message(oApplication.Company.GetLastErrorDescription, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
                             Committrans("Cancel")

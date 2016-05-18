@@ -144,8 +144,8 @@ Public Class clsInstallment
         oEditTextColumn.ColumnSetting.SumType = SAPbouiCOM.BoColumnSumType.bst_Auto
         aGrid.Columns.Item("U_Z_Manual").TitleObject.Caption = "Manual"
         aGrid.Columns.Item("U_Z_Manual").Type = SAPbouiCOM.BoGridColumnType.gct_CheckBox
-        aGrid.Columns.Item("From").Editable = False
-        aGrid.Columns.Item("To").Editable = False
+        aGrid.Columns.Item("From").Editable = True
+        aGrid.Columns.Item("To").Editable = True
         aGrid.Columns.Item("Paid Status").TitleObject.Caption = "Installment Paid Status"
         aGrid.Columns.Item("Paid Status").Type = SAPbouiCOM.BoGridColumnType.gct_ComboBox
         oCombobox = aGrid.Columns.Item("Paid Status")
@@ -230,6 +230,7 @@ Public Class clsInstallment
                     End Select
                     dtTo1 = dtTo1.AddDays(-1)
                 Else
+
                     Select Case strRentType
                         Case "D" '
                             If intNoofDays = 0 Then
@@ -239,21 +240,39 @@ Public Class clsInstallment
                         Case "W"
                             dtTo1 = DateAdd(DateInterval.Day, 7, dtFrom)
                         Case "M"
-                            dtTo1 = DateAdd(DateInterval.Month, 0, dtFrom)
+                            dtTo1 = DateAdd(DateInterval.Month, 1, dtFrom)
                         Case "Q"
-                            dtTo1 = DateAdd(DateInterval.Month, 2, dtFrom)
+                            dtTo1 = DateAdd(DateInterval.Month, 3, dtFrom)
                         Case "S"
-                            dtTo1 = DateAdd(DateInterval.Month, 5, dtFrom)
+                            dtTo1 = DateAdd(DateInterval.Month, 6, dtFrom)
                         Case "A"
                             dtTo1 = DateAdd(DateInterval.Year, 1, dtFrom)
                     End Select
+                    dtTo1 = dtTo1.AddDays(-1)
+                    'Select Case strRentType
+                    '    Case "D" '
+                    '        If intNoofDays = 0 Then
+                    '            intNoofDays = 1
+                    '        End If
+                    '        dtTo1 = DateAdd(DateInterval.Day, 1, dtFrom)
+                    '    Case "W"
+                    '        dtTo1 = DateAdd(DateInterval.Day, 7, dtFrom)
+                    '    Case "M"
+                    '        dtTo1 = DateAdd(DateInterval.Month, 0, dtFrom)
+                    '    Case "Q"
+                    '        dtTo1 = DateAdd(DateInterval.Month, 2, dtFrom)
+                    '    Case "S"
+                    '        dtTo1 = DateAdd(DateInterval.Month, 5, dtFrom)
+                    '    Case "A"
+                    '        dtTo1 = DateAdd(DateInterval.Year, 1, dtFrom)
+                    'End Select
                 End If
 
                 Dim intMOnth As Integer = dtTo1.Month
-                intMOnth = DateTime.DaysInMonth(dtTo1.Year, dtTo1.Month)
-                If strRentType <> "D" And strRentType <> "W" Then
-                    dtTo1 = New DateTime(dtTo1.Year, dtTo1.Month, intMOnth)
-                End If
+                'intMOnth = DateTime.DaysInMonth(dtTo1.Year, dtTo1.Month)
+                'If strRentType <> "D" And strRentType <> "W" Then
+                '    dtTo1 = New DateTime(dtTo1.Year, dtTo1.Month, intMOnth)
+                'End If
                 Dim dt12 As Date = dtTo1
                 Select Case strRentType
                     Case "D" '
@@ -273,13 +292,13 @@ Public Class clsInstallment
                         dt12 = DateAdd(DateInterval.Year, 1, dtTo1)
                 End Select
                 dblRent = dblAnnualRent / dblNoofMonths
-                If dt12 >= dtTo Then
+                If dt12 > dtTo Then
                     dtTo1 = dtTo
                     dblRent = dblAnnualRent - dblAssignedRent
                 End If
 
 
-                otest.DoQuery("Select Code,Name,Cast(U_Z_Month as varchar),cast(U_Z_Year as varchar),U_Z_Amount 'Amount',U_Z_Manual from [@Z_CONINS] where U_Z_Month=" & Month(dtFrom) & " and U_Z_Year=" & Year(dtFrom) & " and   U_Z_ConId=" & CInt(oApplication.Utilities.getEdittextvalue(aForm, "3")))
+                otest.DoQuery("Select Code,Name,Cast(U_Z_Month as varchar),cast(U_Z_Year as varchar),U_Z_Amount 'Amount',U_Z_Manual from [@Z_CONINS] where    U_Z_Month=" & Month(dtFrom) & " and U_Z_Year=" & Year(dtFrom) & " and   U_Z_ConId=" & CInt(oApplication.Utilities.getEdittextvalue(aForm, "3")))
                 If otest.RecordCount <= 0 Then
                     strCode = oApplication.Utilities.getMaxCode("@Z_CONINS", "Code")
                     oUserTable.Code = strCode
@@ -296,6 +315,7 @@ Public Class clsInstallment
                     oUserTable.UserFields.Fields.Item("U_Z_EndDate1").Value = dtTo1 '(oApplication.Utilities.getEdittextvalue(aForm, "9"))
                     oUserTable.UserFields.Fields.Item("U_Z_Month").Value = Month(dtFrom)
                     oUserTable.UserFields.Fields.Item("U_Z_Year").Value = Year(dtFrom)
+
                     oUserTable.UserFields.Fields.Item("U_Z_Amount").Value = dblRent ' dblAnnualRent / dblNoofMonths
                     oUserTable.UserFields.Fields.Item("U_Z_RentType").Value = oCombo.Selected.Value
                     oUserTable.UserFields.Fields.Item("U_Z_Status").Value = "N"
@@ -335,6 +355,8 @@ Public Class clsInstallment
                             oApplication.Utilities.Message(oApplication.Company.GetLastErrorDescription, SAPbouiCOM.BoStatusBarMessageType.smt_Error)
                             Return False
                         End If
+                    Else
+                        dblAssignedRent = dblAssignedRent + otest.Fields.Item("Amount").Value
                     End If
                 End If
 
@@ -382,11 +404,31 @@ Public Class clsInstallment
         otest = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
         If 1 = 1 Then ' otest.RecordCount <= 0 Then
             oGrid = aForm.Items.Item("15").Specific
+            Dim dtFrom2, dtTo2 As Date
             ' oGrid.DataTable.ExecuteQuery("Select  Code,Name,Cast(U_Z_Month as varchar),cast(U_Z_Year as varchar),U_Z_Amount 'Amount' from [@Z_CONINS] where 1=2")
+            ' oUserTable.UserFields.Fields.Item("U_Z_Month").Value = oGrid.DataTable.GetValue(2, intRow)
+            ' oUserTable.UserFields.Fields.Item("U_Z_Year").Value = oGrid.DataTable.GetValue(3, intRow)
+            For intRow As Integer = 0 To oGrid.DataTable.Rows.Count - 1
+                dtFrom2 = oGrid.DataTable.GetValue("From", intRow)
+                If Month(dtFrom2) = oGrid.DataTable.GetValue(2, intRow) And Year(dtFrom2) = oGrid.DataTable.GetValue(3, intRow) Then
+
+                Else
+                    oApplication.Utilities.Message("Installment From date should be in Installment Month and year", SAPbouiCOM.BoStatusBarMessageType.smt_Error)
+                    Return False
+                End If
+
+                If oGrid.DataTable.GetValue("From", intRow) > oGrid.DataTable.GetValue("To", intRow) Then
+                    oApplication.Utilities.Message("Installment End date shuld be greate than installment start date", SAPbouiCOM.BoStatusBarMessageType.smt_Error)
+                    Return False
+                End If
+
+            Next
+
+
             For intRow As Integer = 0 To oGrid.DataTable.Rows.Count - 1
                 strCode = oGrid.DataTable.GetValue("Code", intRow)
                 oCheckBox = oGrid.Columns.Item("U_Z_Manual")
-                dblRent = dblRent + oGrid.DataTable.GetValue("Amount", intRow)
+                dblRent = dblRent + Math.Round(oGrid.DataTable.GetValue("Amount", intRow), 3)
             Next
         End If
         If Math.Round(dblRent, 3) <> Math.Round(dblAnnualRent, 3) Then
@@ -425,17 +467,24 @@ Public Class clsInstallment
                     oUserTable.Name = strCode
                     oUserTable.UserFields.Fields.Item("U_Z_ConID").Value = CInt(oApplication.Utilities.getEdittextvalue(aForm, "3"))
                     oUserTable.UserFields.Fields.Item("U_Z_ConNo").Value = (oApplication.Utilities.getEdittextvalue(aForm, "5"))
-                    oUserTable.UserFields.Fields.Item("U_Z_StartDate").Value = (oApplication.Utilities.getEdittextvalue(aForm, "7"))
-                    oUserTable.UserFields.Fields.Item("U_Z_EndDate").Value = (oApplication.Utilities.getEdittextvalue(aForm, "9"))
+                    Dim dtDate As Date
+                    dtDate = oApplication.Utilities.GetDateTimeValue((oApplication.Utilities.getEdittextvalue(aForm, "7")))
+
+                    oUserTable.UserFields.Fields.Item("U_Z_StartDate").Value = dtDate ' (oApplication.Utilities.getEdittextvalue(aForm, "7"))
+                    dtDate = oApplication.Utilities.GetDateTimeValue((oApplication.Utilities.getEdittextvalue(aForm, "9")))
+
+                    oUserTable.UserFields.Fields.Item("U_Z_EndDate").Value = dtDate '(oApplication.Utilities.getEdittextvalue(aForm, "9"))
                     oUserTable.UserFields.Fields.Item("U_Z_NoofMonths").Value = (oApplication.Utilities.getEdittextvalue(aForm, "11"))
                     oUserTable.UserFields.Fields.Item("U_Z_AnnualRent").Value = (oApplication.Utilities.getEdittextvalue(aForm, "13"))
                     oUserTable.UserFields.Fields.Item("U_Z_Month").Value = oGrid.DataTable.GetValue(2, intRow)
                     oUserTable.UserFields.Fields.Item("U_Z_Year").Value = oGrid.DataTable.GetValue(3, intRow)
                     oUserTable.UserFields.Fields.Item("U_Z_Amount").Value = oGrid.DataTable.GetValue("Amount", intRow)
                     dblRent = dblRent + oGrid.DataTable.GetValue("Amount", intRow)
-                    oUserTable.UserFields.Fields.Item("U_Z_StartDate").Value = oGrid.DataTable.GetValue("From", intRow)
-                    oUserTable.UserFields.Fields.Item("U_Z_EndDate").Value = oGrid.DataTable.GetValue("To", intRow)
+                    
+                    oUserTable.UserFields.Fields.Item("U_Z_StartDate1").Value = oGrid.DataTable.GetValue("From", intRow)
+                    oUserTable.UserFields.Fields.Item("U_Z_EndDate1").Value = oGrid.DataTable.GetValue("To", intRow)
                     oUserTable.UserFields.Fields.Item("U_Z_RentType").Value = oCombo.Selected.Value
+                    '  MsgBox(oGrid.DataTable.GetValue("To", intRow))
                     If oCheckBox.IsChecked(intRow) Then
                         oUserTable.UserFields.Fields.Item("U_Z_Manual").Value = "Y"
                     Else
@@ -501,7 +550,7 @@ Public Class clsInstallment
                         Select Case pVal.EventType
                             Case SAPbouiCOM.BoEventTypes.et_KEY_DOWN
                                 oForm = oApplication.SBO_Application.Forms.Item(FormUID)
-                                If pVal.ItemUID = "15" And pVal.ColUID = "Amount" And pVal.CharPressed <> 9 Then
+                                If pVal.ItemUID = "15" And (pVal.ColUID = "Amount" Or pVal.ColUID = "From" Or pVal.ColUID = "To") And pVal.CharPressed <> 9 Then
                                     oGrid = oForm.Items.Item("15").Specific
                                     Dim ocheck As SAPbouiCOM.CheckBoxColumn
                                     ocheck = oGrid.Columns.Item("U_Z_Manual")
@@ -513,7 +562,7 @@ Public Class clsInstallment
 
                             Case SAPbouiCOM.BoEventTypes.et_CLICK
                                 oForm = oApplication.SBO_Application.Forms.Item(FormUID)
-                                If pVal.ItemUID = "15" And pVal.ColUID = "Amount" Then
+                                If pVal.ItemUID = "15" And (pVal.ColUID = "Amount" Or pVal.ColUID = "From" Or pVal.ColUID = "To") Then
                                     oGrid = oForm.Items.Item("15").Specific
                                     Dim ocheck As SAPbouiCOM.CheckBoxColumn
                                     ocheck = oGrid.Columns.Item("U_Z_Manual")
@@ -525,7 +574,7 @@ Public Class clsInstallment
 
                             Case SAPbouiCOM.BoEventTypes.et_PICKER_CLICKED
                                 oForm = oApplication.SBO_Application.Forms.Item(FormUID)
-                                If pVal.ItemUID = "15" And pVal.ColUID = "Amount" Then
+                                If pVal.ItemUID = "15" And (pVal.ColUID = "Amount" Or pVal.ColUID = "From" Or pVal.ColUID = "To") Then
                                     oGrid = oForm.Items.Item("15").Specific
                                     Dim ocheck As SAPbouiCOM.CheckBoxColumn
                                     ocheck = oGrid.Columns.Item("U_Z_Manual")

@@ -414,13 +414,18 @@ Public Class clsTenContracts
         strCode = oCombo.Selected.Value
         Dim otemp As SAPbobsCOM.Recordset
         otemp = oApplication.Company.GetBusinessObject(SAPbobsCOM.BoObjectTypes.BoRecordset)
-        otemp.DoQuery("Select * from [@Z_OEXP]  where code='" & strCode & "' order by Convert(numeric,Code)")
+        otemp.DoQuery("Select *,isnull(U_Z_RENEWAL,'Y') 'Renewal' from [@Z_OEXP]  where code='" & strCode & "' order by Convert(numeric,Code)")
         If otemp.RecordCount > 0 Then
             oApplication.Utilities.SetMatrixValues(amatrix, "V_5", intRow, otemp.Fields.Item("U_Z_CODE").Value)
             oApplication.Utilities.SetMatrixValues(amatrix, "V_4", intRow, otemp.Fields.Item("U_Z_NAME").Value)
             oApplication.Utilities.SetMatrixValues(amatrix, "V_3", intRow, otemp.Fields.Item("U_Z_GLACC").Value)
             oCombo = oMatrix.Columns.Item("V_2").Cells.Item(intRow).Specific
             oCombo.Select(otemp.Fields.Item("U_Z_TYPE").Value, SAPbouiCOM.BoSearchKey.psk_ByValue)
+            oCombo = oMatrix.Columns.Item("V_7").Cells.Item(intRow).Specific
+            oCombo.Select(otemp.Fields.Item("U_Z_FREQUENCY").Value, SAPbouiCOM.BoSearchKey.psk_ByValue)
+
+            oCombo = oMatrix.Columns.Item("V_18").Cells.Item(intRow).Specific
+            oCombo.Select(otemp.Fields.Item("Renewal").Value, SAPbouiCOM.BoSearchKey.psk_ByValue)
             'oApplication.Utilities.SetMatrixValues(amatrix, "V_2", intRow, otemp.Fields.Item("U_Z_TYPE").Value)
             oApplication.Utilities.SetMatrixValues(amatrix, "V_6", intRow, otemp.Fields.Item("U_Z_RATE").Value)
             If otemp.Fields.Item("U_Z_TYPE").Value = "P" Then
@@ -701,6 +706,7 @@ Public Class clsTenContracts
                 If strToDate <> "" Then
                     dttoDate = oApplication.Utilities.GetDateTimeValue(strToDate)
                 End If
+                '  intNoofMonths = 0
                 Select Case strRentType
                     Case "D" '
                         If intNoofDays = 0 Then
@@ -745,13 +751,29 @@ Public Class clsTenContracts
                 End If
                 ' oApplication.Utilities.setEdittextvalue(oForm, "28", DateDiff(DateInterval.Month, dtFromDate, dttoDate))
                 oApplication.Utilities.setEdittextvalue(aform, "28", intNoofMonths)
-                Dim dblNoMonth, dblAnnual, dblMonth As Double
+                Dim dblNoMonth, dblAnnual, dblMonth, dblMonthlyRent As Double
+                dblMonthlyRent = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(aform, "220"))
+
                 dblNoMonth = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(aform, "28"))
+                dblAnnual = dblMonthlyRent * 12
+                oApplication.Utilities.setEdittextvalue(aform, "17", dblAnnual)
                 dblAnnual = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(aform, "17"))
-                dblMonth = dblAnnual / dblNoMonth
-                oApplication.Utilities.setEdittextvalue(aform, "84", dblMonth)
+                '   dblMonth = dblAnnual / dblNoMonth
+                oCombo = aform.Items.Item("111").Specific
+                strRentType = oCombo.Selected.Value
+                If strRentType = "M" Then
+                    dblAnnual = dblMonthlyRent * 1
+                ElseIf strRentType = "Q" Then
+                    dblAnnual = dblMonthlyRent * 3
+                ElseIf strRentType = "S" Then
+                    dblAnnual = dblMonthlyRent * 6
+                ElseIf strRentType = "Y" Then
+                    dblAnnual = dblMonthlyRent * 12
+                End If
+
+                oApplication.Utilities.setEdittextvalue(aform, "84", dblAnnual)
                 ' oApplication.Utilities.setEdittextvalue(oForm, "28", DateDiff(DateInterval.Month, dtFromDate, dttoDate))
-                dblMonth = dblAnnual / 12
+                dblMonth = dblMonthlyRent 'dblAnnual / 12
                 oApplication.Utilities.setEdittextvalue(aform, "220", dblMonth)
                 oApplication.Utilities.setEdittextvalue(aform, "28", intNoofMonths)
             End If
@@ -1537,6 +1559,10 @@ Public Class clsTenContracts
                         oForm.Items.Item("edExtPro").Enabled = False
                         oCombo = oForm.Items.Item("25").Specific
                         oCombo.Select("N", SAPbouiCOM.BoSearchKey.psk_ByValue)
+                        oForm.Items.Item("84").Enabled = False
+                        oForm.Items.Item("28").Enabled = False
+                        oForm.Items.Item("220").Enabled = True
+
                         GetNextNumber(oForm)
                     End If
 
@@ -1547,6 +1573,10 @@ Public Class clsTenContracts
                     oForm.Items.Item("edDesc").Enabled = True
                     oForm.Items.Item("82").Enabled = True
                     oForm.Items.Item("edExtPro").Enabled = True
+                    oForm.Items.Item("84").Enabled = False
+                    oForm.Items.Item("28").Enabled = False
+                    oForm.Items.Item("220").Enabled = True
+
                     oForm.Items.Item("1").Enabled = True
                     oForm.Mode = SAPbouiCOM.BoFormMode.fm_FIND_MODE
                 Case mnu_ADD_ROW
@@ -1720,7 +1750,9 @@ Public Class clsTenContracts
 
                 End If
 
-             
+                oForm.Items.Item("84").Enabled = False
+                oForm.Items.Item("28").Enabled = False
+                oForm.Items.Item("220").Enabled = True
 
                 oForm.Items.Item("42").Click(SAPbouiCOM.BoCellClickType.ct_Regular)
             End If
@@ -2010,6 +2042,35 @@ Public Class clsTenContracts
                                     End If
                                     
                                 End If
+
+                                If pVal.ItemUID = "220" And pVal.CharPressed = 9 Then
+                                    Dim dblNoMonth, dblAnnual, dblMonth, dblMonthlyRent As Double
+                                    dblMonthlyRent = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "220"))
+                                    dblNoMonth = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "28"))
+                                    dblAnnual = dblMonthlyRent * 12
+                                    oApplication.Utilities.setEdittextvalue(oForm, "17", dblAnnual)
+                                    dblAnnual = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "17"))
+                                    '   dblMonth = dblAnnual / dblNoMonth
+                                    Dim strRentType As String
+                                    oCombo = oForm.Items.Item("111").Specific
+                                    strRentType = oCombo.Selected.Value
+                                    If strRentType = "M" Then
+                                        dblAnnual = dblMonthlyRent * 1
+                                    ElseIf strRentType = "Q" Then
+                                        dblAnnual = dblMonthlyRent * 3
+                                    ElseIf strRentType = "S" Then
+                                        dblAnnual = dblMonthlyRent * 6
+                                    ElseIf strRentType = "Y" Then
+                                        dblAnnual = dblMonthlyRent * 12
+                                    End If
+
+
+                                    oApplication.Utilities.setEdittextvalue(oForm, "84", dblAnnual)
+                                    ' oApplication.Utilities.setEdittextvalue(oForm, "28", DateDiff(DateInterval.Month, dtFromDate, dttoDate))
+                                    dblMonth = dblMonthlyRent 'dblAnnual / 12
+                                    oApplication.Utilities.setEdittextvalue(oForm, "220", dblMonth)
+                                    oApplication.Utilities.setEdittextvalue(oForm, "28", dblNoMonth)
+                                End If
                                 If (pVal.ItemUID = "4" Or pVal.ItemUID = "6") And pVal.CharPressed = 9 Then
                                     Dim strFromDate, strToDate, strRentType As String
                                     Dim dtFromDate, dttoDate As Date
@@ -2073,14 +2134,39 @@ Public Class clsTenContracts
                                         End If
                                         ' oApplication.Utilities.setEdittextvalue(oForm, "28", DateDiff(DateInterval.Month, dtFromDate, dttoDate))
                                         oApplication.Utilities.setEdittextvalue(oForm, "28", intNoofMonths)
-                                        Dim dblNoMonth, dblAnnual, dblMonth As Double
-                                        dblNoMonth = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "28"))
-                                        dblAnnual = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "17"))
-                                        dblMonth = dblAnnual / dblNoMonth
-                                        oApplication.Utilities.setEdittextvalue(oForm, "84", dblMonth)
+                                        'Dim dblNoMonth, dblAnnual, dblMonth As Double
+                                        'dblNoMonth = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "28"))
+                                        'dblAnnual = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "17"))
+                                        'dblMonth = dblAnnual / dblNoMonth
+                                        'oApplication.Utilities.setEdittextvalue(oForm, "84", dblMonth)
 
-                                        dblMonth = dblAnnual / 12
+                                        'dblMonth = dblAnnual / 12
+                                        'oApplication.Utilities.setEdittextvalue(oForm, "220", dblMonth)
+
+                                        Dim dblNoMonth, dblAnnual, dblMonth, dblMonthlyRent As Double
+                                        dblMonthlyRent = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "220"))
+                                        dblNoMonth = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "28"))
+                                        dblAnnual = dblMonthlyRent * 12
+                                        oApplication.Utilities.setEdittextvalue(oForm, "17", dblAnnual)
+                                        dblAnnual = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "17"))
+                                        '   dblMonth = dblAnnual / dblNoMonth
+                                        oCombo = oForm.Items.Item("111").Specific
+                                        strRentType = oCombo.Selected.Value
+                                        If strRentType = "M" Then
+                                            dblAnnual = dblMonthlyRent * 1
+                                        ElseIf strRentType = "Q" Then
+                                            dblAnnual = dblMonthlyRent * 3
+                                        ElseIf strRentType = "S" Then
+                                            dblAnnual = dblMonthlyRent * 6
+                                        ElseIf strRentType = "Y" Then
+                                            dblAnnual = dblMonthlyRent * 12
+                                        End If
+
+                                        oApplication.Utilities.setEdittextvalue(oForm, "84", dblAnnual)
+                                        ' oApplication.Utilities.setEdittextvalue(oForm, "28", DateDiff(DateInterval.Month, dtFromDate, dttoDate))
+                                        dblMonth = dblMonthlyRent 'dblAnnual / 12
                                         oApplication.Utilities.setEdittextvalue(oForm, "220", dblMonth)
+                                        oApplication.Utilities.setEdittextvalue(oForm, "28", dblNoMonth)
                                     End If
 
 
@@ -2162,13 +2248,15 @@ Public Class clsTenContracts
                                     If oCombo.Selected.Value = "D" Then
                                         oForm.Items.Item("115").Enabled = True
                                         oForm.Items.Item("17").Enabled = True
-                                        oForm.Items.Item("84").Enabled = True
+                                        oForm.Items.Item("84").Enabled = False
+                                        oForm.Items.Item("28").Enabled = False
                                     Else
                                         oForm.Items.Item("115").Enabled = False
                                         oForm.Items.Item("17").Enabled = True
-                                        oForm.Items.Item("84").Enabled = True
+                                        oForm.Items.Item("84").Enabled = False
+                                        oForm.Items.Item("28").Enabled = False
                                     End If
-
+                                    oForm.Items.Item("220").Enabled = True
                                     If 1 = 1 Then
                                         Dim strFromDate, strToDate, strRentType As String
                                         Dim dtFromDate, dttoDate As Date
@@ -2230,13 +2318,38 @@ Public Class clsTenContracts
                                             End If
                                             ' oApplication.Utilities.setEdittextvalue(oForm, "28", DateDiff(DateInterval.Month, dtFromDate, dttoDate))
                                             oApplication.Utilities.setEdittextvalue(oForm, "28", intNoofMonths)
-                                            Dim dblNoMonth, dblAnnual, dblMonth As Double
+                                            'Dim dblNoMonth, dblAnnual, dblMonth As Double
+                                            'dblNoMonth = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "28"))
+                                            'dblAnnual = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "17"))
+                                            'dblMonth = dblAnnual / dblNoMonth
+                                            'oApplication.Utilities.setEdittextvalue(oForm, "84", dblMonth)
+                                            'dblMonth = dblAnnual / 12
+                                            'oApplication.Utilities.setEdittextvalue(oForm, "220", dblMonth)
+
+                                            Dim dblNoMonth, dblAnnual, dblMonth, dblMonthlyRent As Double
+                                            dblMonthlyRent = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "220"))
                                             dblNoMonth = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "28"))
+                                            dblAnnual = dblMonthlyRent * 12
+                                            oApplication.Utilities.setEdittextvalue(oForm, "17", dblAnnual)
                                             dblAnnual = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "17"))
-                                            dblMonth = dblAnnual / dblNoMonth
-                                            oApplication.Utilities.setEdittextvalue(oForm, "84", dblMonth)
-                                            dblMonth = dblAnnual / 12
+                                            '   dblMonth = dblAnnual / dblNoMonth
+                                            oCombo = oForm.Items.Item("111").Specific
+                                            strRentType = oCombo.Selected.Value
+                                            If strRentType = "M" Then
+                                                dblAnnual = dblMonthlyRent * 1
+                                            ElseIf strRentType = "Q" Then
+                                                dblAnnual = dblMonthlyRent * 3
+                                            ElseIf strRentType = "S" Then
+                                                dblAnnual = dblMonthlyRent * 6
+                                            ElseIf strRentType = "Y" Then
+                                                dblAnnual = dblMonthlyRent * 12
+                                            End If
+
+                                            oApplication.Utilities.setEdittextvalue(oForm, "84", dblAnnual)
+                                            ' oApplication.Utilities.setEdittextvalue(oForm, "28", DateDiff(DateInterval.Month, dtFromDate, dttoDate))
+                                            dblMonth = dblMonthlyRent 'dblAnnual / 12
                                             oApplication.Utilities.setEdittextvalue(oForm, "220", dblMonth)
+                                            oApplication.Utilities.setEdittextvalue(oForm, "28", dblNoMonth)
                                         End If
                                     End If
                                 End If
@@ -2281,8 +2394,8 @@ Public Class clsTenContracts
                                     dblNoofMonths = oApplication.Utilities.getDocumentQuantity(oApplication.Utilities.getEdittextvalue(oForm, "28"))
                                     dblRent = dblRent / dblNoofMonths
                                     PopulateExpenseDetails(oMatrix, pVal.Row, dblRent)
-                                    oCombo = oMatrix.Columns.Item("V_7").Cells.Item(pVal.Row).Specific
-                                    oCombo.Select("M", SAPbouiCOM.BoSearchKey.psk_ByValue)
+                                    ' oCombo = oMatrix.Columns.Item("V_7").Cells.Item(pVal.Row).Specific
+                                    ' oCombo.Select("M", SAPbouiCOM.BoSearchKey.psk_ByValue)
                                     oForm.Freeze(False)
                                 ElseIf pVal.ItemUID = "25" Then
                                     oCombo = oForm.Items.Item("25").Specific
@@ -2307,6 +2420,8 @@ Public Class clsTenContracts
                                         strFrequency = oCombo.Selected.Value
                                         strMonth = ""
                                         Select Case strFrequency
+                                            ' Case "O"
+
                                             Case "M"
                                                 'strMonth = ""
                                                 For intRow As Integer = 1 To 12
